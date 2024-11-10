@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleHome" value="/usr/local/Cellar/gradle/8.9/libexec" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/supervisor-bukkit" />
+            <option value="$PROJECT_DIR$/supervisor-bukkit-item" />
+            <option value="$PROJECT_DIR$/supervisor-bukkit-menu" />
+            <option value="$PROJECT_DIR$/supervisor-bungee" />
+            <option value="$PROJECT_DIR$/supervisor-configuration" />
+            <option value="$PROJECT_DIR$/supervisor-configuration-json" />
+            <option value="$PROJECT_DIR$/supervisor-configuration-toml" />
+            <option value="$PROJECT_DIR$/supervisor-configuration-yml" />
+            <option value="$PROJECT_DIR$/supervisor-core" />
+            <option value="$PROJECT_DIR$/supervisor-loader" />
+            <option value="$PROJECT_DIR$/supervisor-reflection" />
+            <option value="$PROJECT_DIR$/supervisor-repository" />
+            <option value="$PROJECT_DIR$/supervisor-repository-bukkit" />
+            <option value="$PROJECT_DIR$/supervisor-repository-bukkit-json" />
+            <option value="$PROJECT_DIR$/supervisor-repository-bukkit-mongo" />
+            <option value="$PROJECT_DIR$/supervisor-repository-json" />
+            <option value="$PROJECT_DIR$/supervisor-repository-mongo" />
+            <option value="$PROJECT_DIR$/supervisor-repository-mysql" />
+            <option value="$PROJECT_DIR$/supervisor-velocity" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
