@@ -1,0 +1,4 @@
+main: com.vertmix.supervisor.core.bukkit.BukkitSupervisorPlugin
+version: 2.0
+name: Supervisor
+api-version: 1.19
