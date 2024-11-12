@@ -4,12 +4,15 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.vertmix.supervisor.core.CoreProvider;
+import com.vertmix.supervisor.core.annotation.ModuleDependency;
 import com.vertmix.supervisor.core.module.Module;
 import com.vertmix.supervisor.core.service.Services;
 import com.vertmix.supervisor.repository.mongo.MongoContext;
+import com.vertmix.supervisor.repository.mongo.MongoModule;
 import com.vertmix.supervisor.repository.mongo.MongoPlayerProxyHandler;
 import org.bukkit.plugin.Plugin;
 
+@ModuleDependency(clazz = MongoModule.class)
 public class BukkitMongoModule implements Module<Plugin> {
     private MongoClient mongoClient;
 
