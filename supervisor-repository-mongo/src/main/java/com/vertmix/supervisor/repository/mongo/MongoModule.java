@@ -30,10 +30,8 @@ public class MongoModule implements Module<Object> {
                 mongoDatabase = mongoClient.getDatabase(context.database());
                 collection = context.collection();
             }
-            return newRepository(clazz, new MongoProxyHandler<>(clazz, mongoDatabase, collection));
+            return new MongoProxyHandler<>(clazz, mongoDatabase, collection).getInstance();
         });
-
-
     }
 
     @Override
@@ -41,13 +39,5 @@ public class MongoModule implements Module<Object> {
         if (this.mongoClient != null) {
             this.mongoClient.close();
         }
-    }
-
-    public static <T> MongoRepository<T> newRepository(Class<T> clazz, AbstractProxyHandler<T> handler) {
-        return (MongoRepository<T>) Proxy.newProxyInstance(
-                clazz.getClassLoader(),
-                new Class<?>[]{clazz},
-                handler
-        );
     }
 }

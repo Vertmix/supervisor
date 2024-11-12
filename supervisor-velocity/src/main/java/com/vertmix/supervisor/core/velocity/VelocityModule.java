@@ -3,7 +3,6 @@ package com.vertmix.supervisor.core.velocity;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.EventManager;
 import com.velocitypowered.api.plugin.PluginContainer;
-import com.velocitypowered.api.plugin.PluginManager;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.vertmix.supervisor.core.CoreProvider;
 import com.vertmix.supervisor.core.module.Module;

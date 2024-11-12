@@ -13,9 +13,9 @@ import org.bukkit.plugin.Plugin;
 public class PlayerRepositoryListener<T> implements Listener {
 
     private final CoreProvider<Plugin> provider;
-    private final PlayerRepository<Player, T> playerRepository;
+    private final PlayerRepository<T> playerRepository;
 
-    public PlayerRepositoryListener(CoreProvider<Plugin> provider, PlayerRepository<Player, T> playerRepository) {
+    public PlayerRepositoryListener(CoreProvider<Plugin> provider, PlayerRepository<T> playerRepository) {
         this.provider = provider;
         this.playerRepository = playerRepository;
     }

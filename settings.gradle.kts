@@ -1,21 +1,5 @@
 rootProject.name = "supervisor"
 
-include("supervisor-bukkit")
-include("supervisor-bungee")
-include("supervisor-configuration")
-include("supervisor-configuration-json")
-include("supervisor-configuration-toml")
-include("supervisor-configuration-yml")
-include("supervisor-core")
-include("supervisor-bukkit-item")
-include("supervisor-loader")
-include("supervisor-bukkit-menu")
-include("supervisor-reflection")
-include("supervisor-repository")
-include("supervisor-repository-json")
-include("supervisor-repository-mongo")
-include("supervisor-repository-mysql")
-include("supervisor-velocity")
-include("supervisor-repository-bukkit")
-include("supervisor-repository-bukkit-json")
-include("supervisor-repository-bukkit-mongo")
+rootDir.listFiles()
+    ?.filter { it.isDirectory && it.name.startsWith("supervisor") }
+    ?.forEach { include(it.name) }
