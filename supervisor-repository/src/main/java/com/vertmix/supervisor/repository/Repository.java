@@ -20,7 +20,7 @@ public interface Repository<T> {
      * @param key  The unique identifier for the entity to be saved. Must not be null.
      * @param type The entity to be saved in the repository. Must not be null.
      */
-    void save(Object key, T type);
+    T save(Object key, T type);
 
     /**
      * Deletes an entity from the repository by its unique key.
@@ -46,11 +46,17 @@ public interface Repository<T> {
     
     Collection<T> values();
 
-    /**
-     * Returns all keys used to uniquely identify entities in the repository.
-     *
-     * @return A collection of all unique keys in the repository. The collection is guaranteed to be non-null, but may be empty.
-     */
-    
+    void cache(Object key, T type);
+
     Collection<String> keys();
+
+    void invalidate(Object key);
+
+    void invalidateAll();
+
+    void deleteAll();
+
+    void saveAll();
+
+    Collection<T> findAll();
 }

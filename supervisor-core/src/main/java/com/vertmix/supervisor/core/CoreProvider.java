@@ -2,17 +2,17 @@ package com.vertmix.supervisor.core;
 
 import java.nio.file.Path;
 
-public class CoreProvider<T> {
+public abstract class CoreProvider<T> {
 
-    private final Path path;
-    private final T source;
+    protected final Path path;
+    protected final T source;
+
+    protected boolean debug = false;
 
     public CoreProvider(Path path, T source) {
         this.path = path;
         this.source = source;
     }
-
-    private boolean debug = false;
 
     public Path getPath() {
         return path;
@@ -22,15 +22,12 @@ public class CoreProvider<T> {
         return source;
     }
 
-    public void log(String str) {
-
-    }
+    public abstract void log(String str);
 
     public void debug(String str) {
-
+        if (debug)
+            log("[DEBUG] " + str);
     }
 
-    public void error(String str) {
-
-    }
+    public abstract void error(String str);
 }

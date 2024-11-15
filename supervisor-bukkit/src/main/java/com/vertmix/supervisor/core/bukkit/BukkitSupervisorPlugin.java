@@ -14,6 +14,6 @@ public class BukkitSupervisorPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
+        SupervisorLoader.disable();
     }
 }

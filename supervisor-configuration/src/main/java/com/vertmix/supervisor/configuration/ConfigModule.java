@@ -13,6 +13,8 @@ public class ConfigModule implements Module<Object> {
 
     @Override
     public void onEnable(CoreProvider<Object> provider) {
+        System.out.println("Loaded configuration module");
+        Services.registerProcess(Configuration.class);
         Services.registerConsumer(o -> {
             if (o.getClass().isAnnotationPresent(Configuration.class)) {
                 Class<?> clazz = o.getClass();

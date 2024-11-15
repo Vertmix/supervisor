@@ -16,7 +16,6 @@ public class BukkitModule implements Module<Plugin> {
                 Bukkit.getPluginManager().registerEvents((Listener) o, provider.getSource());
             }
         });
-
     }
 
     @Override

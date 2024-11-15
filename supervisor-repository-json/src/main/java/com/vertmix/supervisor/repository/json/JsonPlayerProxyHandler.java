@@ -13,8 +13,10 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @param <T> The type of player data managed by this handler.
  */
-public class JsonPlayerProxyHandler<T> extends AbstractProxyHandler<T> {
+public class JsonPlayerProxyHandler<T> extends AbstractProxyHandler<T>  {
 
     private final File directory;
     private final Class<T> entityType;
@@ -71,21 +73,84 @@ public class JsonPlayerProxyHandler<T> extends AbstractProxyHandler<T> {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         switch (method.getName()) {
-            case "get":
-                return get((String) args[0]);
+            case "find":
+                return find((String) args[0]);
             case "save":
                 save((String) args[0], (T) args[1]);
-                return null;
+                return args[1];
             case "delete":
-                delete((String) args[0]);
-                return null;
+                return delete((String) args[0]);
             case "containsKey":
                 return containsKey((String) args[0]);
             case "values":
                 return values();
+            case "keys":
+                return keys();
+            case "cache":
+                cache.put((String) args[0], (T) args[1]);
+            case "invalidate":
+                invalidate((String) args[0]);
+                return null;
+            case "invalidateAll":
+                invalidateAll();
+                return null;
+            case "deleteAll":
+                deleteAll();
+                return null;
+            case "saveAll":
+                saveAll();
+                return null;
+            case "findAll":
+                return findAll();
             default:
                 throw new UnsupportedOperationException("Unsupported operation: " + method.getName());
         }
+    }
+
+    public T find(String key) {
+        return get(key);
+    }
+
+    public boolean delete(String key) {
+        boolean existed = containsKey(key);
+        deleteInternal(key);
+        return existed;
+    }
+
+    public Collection<T> values() {
+        return getAllValues();
+    }
+
+    public Set<String> keys() {
+        return cache.keySet();
+    }
+
+    public void invalidate(String key) {
+        cache.remove(key);
+    }
+
+    public void invalidateAll() {
+        cache.clear();
+    }
+
+    public void deleteAll() {
+        cache.clear();
+        File[] files = directory.listFiles((dir, name) -> name.endsWith(".json"));
+        if (files != null) {
+            for (File file : files) {
+                if (!file.delete()) {
+                    System.err.println("Failed to delete file: " + file.getName());
+                }
+            }
+        }
+    }
+
+    public void saveAll() {
+        cache.forEach(this::save);
+    }
+
+    public Collection<T> findAll() {
+        return values();
     }
 
     private T get(String key) {
@@ -131,7 +196,7 @@ public class JsonPlayerProxyHandler<T> extends AbstractProxyHandler<T> {
         }
     }
 
-    private void delete(String key) {
+    private void deleteInternal(String key) {
         cache.remove(key);
 
         File file = new File(directory, key + ".json");
@@ -149,7 +214,7 @@ public class JsonPlayerProxyHandler<T> extends AbstractProxyHandler<T> {
         return file.exists();
     }
 
-    private Map<String, T> values() {
+    private Collection<T> getAllValues() {
         Map<String, T> allValues = new HashMap<>(cache);
 
         File[] files = directory.listFiles((dir, name) -> name.endsWith(".json"));
@@ -168,6 +233,6 @@ public class JsonPlayerProxyHandler<T> extends AbstractProxyHandler<T> {
                 }
             }
         }
-        return allValues;
+        return allValues.values();
     }
 }

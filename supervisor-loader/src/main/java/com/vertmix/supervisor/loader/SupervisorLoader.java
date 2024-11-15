@@ -5,6 +5,7 @@ import com.vertmix.supervisor.core.annotation.Component;
 import com.vertmix.supervisor.core.annotation.Navigation;
 import com.vertmix.supervisor.core.module.Module;
 import com.vertmix.supervisor.core.service.Services;
+import com.vertmix.supervisor.core.terminable.Terminal;
 import com.vertmix.supervisor.repository.json.JsonProxyHandler;
 import com.vertmix.supervisor.repository.json.JsonRepository;
 import org.reflections.Reflections;
@@ -13,13 +14,13 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.vertmix.supervisor.reflection.ReflectionUtil.getComponentConstructor;
-import static com.vertmix.supervisor.repository.json.JsonRepositoryModule.newRepository;
 
 public class SupervisorLoader {
 
@@ -34,36 +35,33 @@ public class SupervisorLoader {
                     .setScanners(new SubTypesScanner(false)));
 
             // Collect all classes in the package
-            Set<Class<?>> classes = reflections.getSubTypesOf(Object.class).stream()
-                    .filter(clazz -> clazz.getName().startsWith(packageName))
-                    .collect(Collectors.toSet());
+            final Set<Class<?>> classes = reflections.getAll(new SubTypesScanner(false)).stream().filter(x -> x.startsWith(packageName)).map(x -> {
+                try {
+                    return Class.forName(x);
+                } catch (ClassNotFoundException e) {
+                    System.out.println("Could not find class " + x);
+                    return null;
+                }
+            }).collect(Collectors.toSet());
 
             Set<Module> modules = new HashSet<>();
             for (Class<?> clazz : classes) {
-                if (clazz.isAssignableFrom(Module.class)) {
+                System.out.println(clazz.getSimpleName());
+                if (clazz.isInterface()) continue;
+                if (clazz.getInterfaces().length == 0) continue;
+                if (clazz.getInterfaces()[0] == Module.class) {
                     Module module = (Module) clazz.getDeclaredConstructor().newInstance();
                     module.onEnable(provider);
                     modules.add(module);
                 }
             }
 
-            Services.register(JsonRepository.class, clazz -> {
-                System.out.println("CREATING + " + clazz.getSimpleName());
-                Navigation navigation = clazz.getAnnotation(Navigation.class);
-                File file = new File("help");
-                if (navigation != null) {
-                    file = new File(navigation.path());
-                }
-
-                return newRepository(clazz, new JsonProxyHandler<>(clazz, file));
-            });
-
             // First pass: register all components
             Set<Class<?>> componentClasses = new HashSet<>();
             for (Class<?> clazz : classes) {
-                if (clazz.isAnnotationPresent(Component.class)) {
+                if (process(clazz))
                     componentClasses.add(clazz);
-                }
+
             }
 
             for (Class<?> componentClass : componentClasses) {
@@ -80,6 +78,10 @@ public class SupervisorLoader {
         }
     }
 
+    public static void disable() {
+        Services.getServices().values().stream().filter(o -> o instanceof Terminal).map(o -> (Terminal)o).forEach(Terminal::closeSilently);
+    }
+
     private static void registerComponent(Class<?> clazz) throws Exception {
         if (Services.getService(clazz) != null) {
             // Component is already registered
@@ -88,11 +90,8 @@ public class SupervisorLoader {
 
         if (clazz.isInterface()) {
             // Handle interface by using factory from Services
-            System.out.println("[DEBUG] Found interface component: " + clazz.getName());
-            System.out.println(clazz.getInterfaces()[0]);
             if (Services.getFactories().containsKey(clazz.getInterfaces()[0])) {
                 Services.register(clazz, Services.create(clazz));
-                System.out.println("[DEBUG] Registered interface component using factory: " + clazz.getName());
             } else {
                 System.err.println("[WARNING] No factory found for interface: " + clazz.getName());
             }
@@ -122,10 +121,13 @@ public class SupervisorLoader {
         for (int i = 0; i < paramTypes.length; i++) {
             Class<?> paramType = paramTypes[i];
             Object serviceInstance = Services.getService(paramType);
+            System.out.println(paramType.getSimpleName());
+            System.out.println(process(paramType));
 
             if (serviceInstance != null) {
                 params[i] = serviceInstance;
-            } else if (paramType.isAnnotationPresent(Component.class)) {
+            } else if (process(paramType)) {
+                System.out.println("can process");
                 // Register dependency if not already registered
                 registerComponent(paramType);
                 params[i] = Services.getService(paramType);
@@ -134,5 +136,14 @@ public class SupervisorLoader {
             }
         }
         return params;
+    }
+
+    private static boolean process(Class<?> clazz) {
+        for (Class<? extends Annotation> processor : Services.getProcessable()) {
+            if (clazz.isAnnotationPresent(processor)){
+                return true;
+            }
+        }
+        return false;
     }
 }

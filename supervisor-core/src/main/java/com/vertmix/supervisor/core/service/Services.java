@@ -1,14 +1,19 @@
 package com.vertmix.supervisor.core.service;
 
+import com.vertmix.supervisor.core.annotation.Component;
+
+import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class Services {
 
+    private static final Set<Class<? extends Annotation>> processable = new HashSet<>() {{
+        add(Component.class);
+    }};
     private static final Map<Class<?>, Function<?, ?>> factories = new HashMap<>();
     private static final Map<Class<?>, Object> services = new HashMap<>();
-
     private static final Set<Consumer<Object>> consumers = new HashSet<>();
 
 
@@ -26,6 +31,9 @@ public class Services {
         consumers.forEach(consumer -> consumer.accept(type));
     }
 
+    public static void registerProcess(Class<? extends Annotation> clazz) {
+        processable.add(clazz);
+    }
 
 
     @SuppressWarnings("unchecked")
@@ -110,6 +118,7 @@ public class Services {
         return services;
     }
 
-
-
+    public static Set<Class<? extends Annotation>> getProcessable() {
+        return processable;
+    }
 }

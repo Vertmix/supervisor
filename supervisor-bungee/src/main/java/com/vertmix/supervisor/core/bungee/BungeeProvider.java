@@ -13,4 +13,13 @@ public class BungeeProvider extends CoreProvider<Plugin> {
         return new BungeeProvider(plugin);
     }
 
+    @Override
+    public void log(String str) {
+        source.getLogger().info(str);
+    }
+
+    @Override
+    public void error(String str) {
+        source.getLogger().severe(str);
+    }
 }

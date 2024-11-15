@@ -33,6 +33,13 @@ public class JsonProxyHandler<T> extends AbstractProxyHandler<T> {
 
     private static final Gson GSON = new Gson();
 
+    /**
+     * Constructs a new {@code JsonProxyHandler} instance for the specified service interface and JSON file.
+     *
+     * @param serviceInterface The repository interface that this handler will proxy. Must be an interface.
+     * @param file The file where the repository data will be persisted. Must not be null.
+     * @throws IllegalArgumentException if the service interface is not an interface, or if the generic type parameter is invalid.
+     */
     public JsonProxyHandler(Class<T> serviceInterface, File file) {
         super(serviceInterface);
 
@@ -58,9 +65,18 @@ public class JsonProxyHandler<T> extends AbstractProxyHandler<T> {
         }
 
         this.file = file;
-        //this.cache = loadFromFile(); // Assume loadFromFile is defined elsewhere
+        this.cache = loadFromFile();
     }
 
+    /**
+     * Handles method invocations on the proxy instance by routing them to the appropriate JSON-backed operations.
+     *
+     * @param proxy The proxy instance that the method was invoked on.
+     * @param method The method being called.
+     * @param args The arguments of the method call.
+     * @return The result of the method invocation.
+     * @throws Throwable if an error occurs during method execution.
+     */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         switch (method.getName()) {
@@ -68,11 +84,11 @@ public class JsonProxyHandler<T> extends AbstractProxyHandler<T> {
                 return cache.get((String) args[0]);
             case "save":
                 cache.put((String) args[0], (T) args[1]);
-                //saveToFile();
-                return null;
+                saveToFile();
+                return cache.get((String) args[0]);
             case "delete":
                 cache.remove((String) args[0]);
-                //saveToFile();
+                saveToFile();
                 return null;
             case "containsKey":
                 return cache.containsKey((String) args[0]);
@@ -80,11 +96,34 @@ public class JsonProxyHandler<T> extends AbstractProxyHandler<T> {
                 return new ArrayList<>(cache.values());
             case "keys":
                 return new ArrayList<>(cache.keySet());
+            case "cache":
+                cache.put((String) args[0], (T) args[1]);
+                return null;
+            case "invalidate":
+                cache.remove((String) args[0]);
+                return null;
+            case "invalidateAll":
+                cache.clear();
+                return null;
+            case "deleteAll":
+                cache.clear();
+                saveToFile();
+                return null;
+            case "saveAll":
+                saveToFile();
+                return null;
+            case "findAll":
+                return new ArrayList<>(loadFromFile().values());
             default:
                 throw new UnsupportedOperationException("Unsupported operation: " + method.getName());
         }
     }
 
+    /**
+     * Loads the repository data from the specified JSON file.
+     *
+     * @return A map containing the loaded repository data.
+     */
     private Map<String, T> loadFromFile() {
         if (!file.exists()) {
             return new ConcurrentHashMap<>();
@@ -99,6 +138,9 @@ public class JsonProxyHandler<T> extends AbstractProxyHandler<T> {
         }
     }
 
+    /**
+     * Saves the current state of the repository data to the specified JSON file.
+     */
     private void saveToFile() {
         try {
             if (!file.exists()) {
