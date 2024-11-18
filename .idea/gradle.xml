@@ -12,7 +12,9 @@
             <option value="$PROJECT_DIR$/supervisor-bukkit" />
             <option value="$PROJECT_DIR$/supervisor-bukkit-item" />
             <option value="$PROJECT_DIR$/supervisor-bukkit-menu" />
+            <option value="$PROJECT_DIR$/supervisor-bukkit-util" />
             <option value="$PROJECT_DIR$/supervisor-bungee" />
+            <option value="$PROJECT_DIR$/supervisor-bungee-util" />
             <option value="$PROJECT_DIR$/supervisor-configuration" />
             <option value="$PROJECT_DIR$/supervisor-configuration-json" />
             <option value="$PROJECT_DIR$/supervisor-configuration-toml" />
@@ -24,10 +26,19 @@
             <option value="$PROJECT_DIR$/supervisor-repository-bukkit" />
             <option value="$PROJECT_DIR$/supervisor-repository-bukkit-json" />
             <option value="$PROJECT_DIR$/supervisor-repository-bukkit-mongo" />
+            <option value="$PROJECT_DIR$/supervisor-repository-bukkit-sql" />
+            <option value="$PROJECT_DIR$/supervisor-repository-bungee-json" />
+            <option value="$PROJECT_DIR$/supervisor-repository-bungee-mongo" />
+            <option value="$PROJECT_DIR$/supervisor-repository-bungee-sql" />
             <option value="$PROJECT_DIR$/supervisor-repository-json" />
+            <option value="$PROJECT_DIR$/supervisor-repository-migrator" />
             <option value="$PROJECT_DIR$/supervisor-repository-mongo" />
-            <option value="$PROJECT_DIR$/supervisor-repository-mysql" />
+            <option value="$PROJECT_DIR$/supervisor-repository-sql" />
+            <option value="$PROJECT_DIR$/supervisor-repository-velocity-json" />
+            <option value="$PROJECT_DIR$/supervisor-repository-velocity-mongo" />
+            <option value="$PROJECT_DIR$/supervisor-repository-velocity-sql" />
             <option value="$PROJECT_DIR$/supervisor-velocity" />
+            <option value="$PROJECT_DIR$/supervisor-velocity-util" />
           </set>
         </option>
       </GradleProjectSettings>

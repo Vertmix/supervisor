@@ -12,7 +12,7 @@ public class BukkitModule implements Module<Plugin> {
     @Override
     public void onEnable(CoreProvider<Plugin> provider) {
         Services.registerConsumer(o -> {
-            if (o.getClass().isAssignableFrom(Listener.class)) {
+            if (o instanceof Listener) {
                 Bukkit.getPluginManager().registerEvents((Listener) o, provider.getSource());
             }
         });

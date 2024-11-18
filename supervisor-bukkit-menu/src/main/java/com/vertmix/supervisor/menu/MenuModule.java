@@ -4,59 +4,49 @@ import com.vertmix.supervisor.core.CoreProvider;
 import com.vertmix.supervisor.core.annotation.Navigation;
 import com.vertmix.supervisor.core.module.Module;
 import com.vertmix.supervisor.core.service.Services;
-import com.vertmix.supervisor.reflection.AbstractProxyHandler;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
-import java.lang.reflect.Proxy;
+import java.io.IOException;
 
-public class MenuModule implements Module<Object> {
+public class MenuModule implements Module<Plugin> {
 
     private File folder = null;
 
     @Override
-    public void onEnable(CoreProvider<Object> provider) {
+    public void onEnable(CoreProvider<Plugin> provider) {
         folder = provider.getPath().toFile();
         Services.register(Menu.class, clazz -> {
             File file = folder;
             Navigation navigation = clazz.getAnnotation(Navigation.class);
             if (navigation != null) {
-                file = new File(navigation.path());
+                file = new File(provider.getPath().toFile(), navigation.path());
+                File parentDir = file.getParentFile();
+                if (parentDir != null && !parentDir.exists() && !parentDir.mkdirs()) {
+                    throw new IllegalStateException("Failed to create parent directory at: " + parentDir.getPath());
+                }
+
+                try {
+                    if (!file.exists() && !file.createNewFile()) {
+                        throw new IllegalStateException("Failed to create configuration file at: " + file.getPath());
+                    }
+                } catch (IOException e) {
+                    throw new IllegalStateException("An error occurred while creating the file: " + file.getPath(), e);
+                }
             }
 
-            return newRepository(clazz, new MenuProxyHandler(clazz, file));
+            Menu menu = new MenuProxyHandler(clazz, file).getInstance();
+            menu.setup();
+            menu.init();
+            return menu;
         });
 
-        Services.register(PagedMenu.class, clazz -> {
-            File file = folder;
-            Navigation navigation = clazz.getAnnotation(Navigation.class);
-            if (navigation != null) {
-                file = new File(navigation.path());
-            }
-
-            return newPagedRepository(clazz, new PagedMenuProxyHandler(clazz, file));
-        });
-
-        // TODO: 2024-11-09 Implement listener logic for menus
+        Bukkit.getPluginManager().registerEvents(new MenuListener(), provider.getSource());
     }
 
     @Override
     public void onDisable() {
 
-    }
-
-    public static Menu newRepository(Class<Menu> clazz, AbstractProxyHandler<Menu> handler) {
-        return (Menu) Proxy.newProxyInstance(
-                clazz.getClassLoader(),
-                new Class<?>[]{clazz},
-                handler
-        );
-    }
-
-    public static PagedMenu newPagedRepository(Class<PagedMenu> clazz, AbstractProxyHandler<PagedMenu> handler) {
-        return (PagedMenu) Proxy.newProxyInstance(
-                clazz.getClassLoader(),
-                new Class<?>[]{clazz},
-                handler
-        );
     }
 }

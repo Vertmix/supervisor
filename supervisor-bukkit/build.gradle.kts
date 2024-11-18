@@ -38,6 +38,7 @@ subprojects {
 tasks.shadowJar {
     relocate("com.vertmix.supervisor.repository", "com.vertmix.supervisor.core.bukkit.repository")
     relocate("com.vertmix.supervisor.configuration", "com.vertmix.supervisor.core.bukkit.configuration")
+    relocate("com.vertmix.supervisor.menu", "com.vertmix.supervisor.core.bukkit.menu")
 }
 
 dependencies {
@@ -47,5 +48,7 @@ dependencies {
     implementation(project(":supervisor-repository-json"))
     implementation(project(":supervisor-configuration"))
     implementation(project(":supervisor-configuration-yml"))
+    implementation(project(":supervisor-bukkit-menu"))
+    implementation(project(":supervisor-bukkit-item"))
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
 }

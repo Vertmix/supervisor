@@ -12,18 +12,27 @@ public abstract class AbstractProxyHandler<T> implements ProxyHandler<T> {
 
     // The specific entity type handled by this proxy, derived from the service interface's generic parameters
     protected final Type entityType;
-
+    public AbstractProxyHandler(Class<T> serviceInterface) {
+        this(serviceInterface, false);
+    }
     /**
      * Constructor for creating an instance of {@link AbstractProxyHandler}.
      *
      * @param serviceInterface The service interface that this proxy handler will implement.
      */
-    public AbstractProxyHandler(Class<T> serviceInterface) {
+    public AbstractProxyHandler(Class<T> serviceInterface, boolean bypass) {
         this.serviceInterface = serviceInterface;
 
         // Retrieve the entity type from the generic parameter of the service interface.
         // This allows the handler to know the exact type that is being proxied.
-        this.entityType = ((ParameterizedType) serviceInterface.getGenericInterfaces()[0]).getActualTypeArguments()[0];
+        if (!bypass) {
+            if (serviceInterface.getGenericInterfaces().length > 0)
+                this.entityType = ((ParameterizedType) serviceInterface.getGenericInterfaces()[0]).getActualTypeArguments()[0];
+            else
+                entityType = null;
+        } else {
+            entityType = null;
+        }
     }
 
     /**
