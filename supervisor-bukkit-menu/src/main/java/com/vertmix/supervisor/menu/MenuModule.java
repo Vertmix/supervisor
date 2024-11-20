@@ -4,6 +4,9 @@ import com.vertmix.supervisor.core.CoreProvider;
 import com.vertmix.supervisor.core.annotation.Navigation;
 import com.vertmix.supervisor.core.module.Module;
 import com.vertmix.supervisor.core.service.Services;
+import com.vertmix.supervisor.menu.listener.MenuListener;
+import com.vertmix.supervisor.menu.menu.Menu;
+import com.vertmix.supervisor.menu.service.MenuProxyHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 

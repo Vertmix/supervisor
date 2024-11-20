@@ -1,4 +1,4 @@
-package com.vertmix.supervisor.menu;
+package com.vertmix.supervisor.menu.service;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonParser;
@@ -9,10 +9,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.VisibilityChecker;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
-import com.vertmix.supervisor.configuration.ConfigModule;
-import com.vertmix.supervisor.configuration.ConfigService;
-import com.vertmix.supervisor.configuration.yml.YamlConfigService;
 import com.vertmix.supervisor.core.bukkit.item.Icon;
+import com.vertmix.supervisor.menu.item.GuiAction;
+import com.vertmix.supervisor.menu.menu.InteractionModifier;
+import com.vertmix.supervisor.menu.menu.Menu;
+import lombok.Getter;
+import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -28,25 +30,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Method;
 import java.util.*;
 
 public class SimpleMenu implements Menu, InventoryHolder {
 
-    private final Map<Character, Icon> items = new HashMap<>();
-    private final Map<Character, GuiAction<InventoryClickEvent>> actions = new HashMap<>();
-    private final List<String> schema = new ArrayList<>();
-    private final Map<String, Object> options = new HashMap<>();
-    private final File file;
-    private GuiAction<InventoryClickEvent> defaultClickAction;
-    private GuiAction<InventoryClickEvent> defaultTopClickAction;
-    private GuiAction<InventoryClickEvent> playerInventoryAction;
-    private GuiAction<InventoryDragEvent> dragAction;
-    private GuiAction<InventoryCloseEvent> closeGuiAction;
-    private GuiAction<InventoryOpenEvent> openGuiAction;
-    private GuiAction<InventoryClickEvent> outsideClickAction;
-    private final Set<InteractionModifier> interactionModifiers = new HashSet<>();
     private static final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory()
             .enable(YAMLGenerator.Feature.INDENT_ARRAYS_WITH_INDICATOR)
             .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES)
@@ -57,10 +44,25 @@ public class SimpleMenu implements Menu, InventoryHolder {
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY));
 
-    private Inventory inventory;
-
-    private MenuData menuData = new MenuData();
+    private final File file;
     private final Class<Menu> clazz;
+
+    private final @Getter Map<Character, Icon> items = new HashMap<>();
+    private final @Getter Map<Character, GuiAction<InventoryClickEvent>> actions = new HashMap<>();
+    private final @Getter List<String> schema = new ArrayList<>();
+    private final @Getter Map<String, Object> options = new HashMap<>();
+    private final @Getter Set<InteractionModifier> interactionModifiers = new HashSet<>();
+
+    private @Setter @Getter GuiAction<InventoryClickEvent> defaultClickAction;
+    private @Setter @Getter GuiAction<InventoryClickEvent> defaultTopClickAction;
+    private @Setter @Getter GuiAction<InventoryClickEvent> playerInventoryAction;
+    private @Setter @Getter GuiAction<InventoryDragEvent> dragAction;
+    private @Setter @Getter GuiAction<InventoryCloseEvent> closeGuiAction;
+    private @Setter @Getter GuiAction<InventoryOpenEvent> openGuiAction;
+    private @Setter @Getter GuiAction<InventoryClickEvent> outsideClickAction;
+
+    private Inventory inventory;
+    private MenuData menuData = new MenuData();
 
     public SimpleMenu(File file, Class<Menu> clazz) {
         this.file = file;
@@ -122,8 +124,7 @@ public class SimpleMenu implements Menu, InventoryHolder {
 
     @Override
     public void render() {
-
-        inventory = Bukkit.createInventory(this, 9, Component.text((String)options.getOrDefault("title", "Menu")));
+        inventory = Bukkit.createInventory(this, 9, Component.text((String) options.getOrDefault("title", "Menu")));
 
         for (int row = 0; row < schema.size(); row++) {
             String rowSchema = schema.get(row);
@@ -137,7 +138,6 @@ public class SimpleMenu implements Menu, InventoryHolder {
             }
         }
     }
-
 
 
     @Override
@@ -179,54 +179,6 @@ public class SimpleMenu implements Menu, InventoryHolder {
             return actions.get(c);
         }
         return null;
-    }
-
-    public Map<Character, Icon> getItems() {
-        return items;
-    }
-
-    public Map<Character, GuiAction<InventoryClickEvent>> getActions() {
-        return actions;
-    }
-
-    public List<String> getSchema() {
-        return schema;
-    }
-
-    public Map<String, Object> getOptions() {
-        return options;
-    }
-
-    public GuiAction<InventoryClickEvent> getDefaultClickAction() {
-        return defaultClickAction;
-    }
-
-    public GuiAction<InventoryClickEvent> getDefaultTopClickAction() {
-        return defaultTopClickAction;
-    }
-
-    public GuiAction<InventoryClickEvent> getPlayerInventoryAction() {
-        return playerInventoryAction;
-    }
-
-    public GuiAction<InventoryDragEvent> getDragAction() {
-        return dragAction;
-    }
-
-    public GuiAction<InventoryCloseEvent> getCloseGuiAction() {
-        return closeGuiAction;
-    }
-
-    public GuiAction<InventoryOpenEvent> getOpenGuiAction() {
-        return openGuiAction;
-    }
-
-    public GuiAction<InventoryClickEvent> getOutsideClickAction() {
-        return outsideClickAction;
-    }
-
-    public Set<InteractionModifier> getInteractionModifiers() {
-        return interactionModifiers;
     }
 
     @Override

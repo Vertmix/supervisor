@@ -1,19 +1,15 @@
-package com.vertmix.supervisor.menu;
+package com.vertmix.supervisor.menu.service;
 
 import com.vertmix.supervisor.core.bukkit.item.Icon;
+import com.vertmix.supervisor.menu.item.GuiAction;
+import com.vertmix.supervisor.menu.menu.Menu;
 import com.vertmix.supervisor.reflection.AbstractProxyHandler;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 
 import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MenuProxyHandler extends AbstractProxyHandler<Menu> {
 
