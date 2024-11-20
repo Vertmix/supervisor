@@ -4,7 +4,9 @@ import com.vertmix.supervisor.menu.item.GuiAction;
 import com.vertmix.supervisor.menu.service.SimpleMenu;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.*;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryType;
 
 public class MenuListener implements Listener {
 
@@ -38,8 +40,9 @@ public class MenuListener implements Listener {
             slotAction.run(event);
         }
 
-        final GuiAction<InventoryClickEvent> itemAction = menu.getAction(event.getSlot());
-        if (itemAction != null) itemAction.run(event);
+//todo reimplement when item action is setup!
+//    final GuiAction<InventoryClickEvent> itemAction = menu.getAction(event.getSlot());
+//    if (itemAction != null) itemAction.run(event);
     }
 
     @EventHandler
