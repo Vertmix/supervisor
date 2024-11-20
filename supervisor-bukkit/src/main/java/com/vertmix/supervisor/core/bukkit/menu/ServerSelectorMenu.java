@@ -3,7 +3,7 @@ package com.vertmix.supervisor.core.bukkit.menu;
 import com.vertmix.supervisor.core.annotation.Component;
 import com.vertmix.supervisor.core.annotation.Navigation;
 import com.vertmix.supervisor.core.bukkit.item.Icon;
-import com.vertmix.supervisor.menu.Menu;
+import com.vertmix.supervisor.menu.menu.Menu;
 import org.bukkit.Sound;
 
 import java.util.List;
@@ -14,8 +14,9 @@ public interface ServerSelectorMenu extends Menu {
 
     @Override
     default void setup() {
+
         System.out.println("is this being called?");
-        schema().addAll(List.of("#########"));
+        schema().add(List.of("#########"));
         options().put("title", "demo");
         options().put("click_sound", Sound.AMBIENT_CAVE.name());
 
@@ -25,4 +26,11 @@ public interface ServerSelectorMenu extends Menu {
 
 
     }
+
+    @Override
+    default void render() {
+
+    }
+
+
 }

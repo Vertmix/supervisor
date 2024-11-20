@@ -19,6 +19,11 @@ public class MenuModule implements Module<Plugin> {
 
     @Override
     public void onEnable(CoreProvider<Plugin> provider) {
+
+
+        Bukkit.getPluginManager().registerEvents(new MenuListener(), provider.getSource());
+
+
         folder = provider.getPath().toFile();
         Services.register(Menu.class, clazz -> {
             File file = folder;
@@ -41,11 +46,10 @@ public class MenuModule implements Module<Plugin> {
 
             Menu menu = new MenuProxyHandler(clazz, file).getInstance();
             menu.setup();
+            menu.schema().build();
             menu.init();
             return menu;
         });
-
-        Bukkit.getPluginManager().registerEvents(new MenuListener(), provider.getSource());
     }
 
     @Override

@@ -13,6 +13,7 @@ import com.vertmix.supervisor.core.bukkit.item.Icon;
 import com.vertmix.supervisor.menu.item.GuiAction;
 import com.vertmix.supervisor.menu.menu.InteractionModifier;
 import com.vertmix.supervisor.menu.menu.Menu;
+import com.vertmix.supervisor.menu.menu.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
@@ -49,7 +50,7 @@ public class SimpleMenu implements Menu, InventoryHolder {
 
     private final @Getter Map<Character, Icon> items = new HashMap<>();
     private final @Getter Map<Character, GuiAction<InventoryClickEvent>> actions = new HashMap<>();
-    private final @Getter List<String> schema = new ArrayList<>();
+    private final @Getter Schema schema = new Schema();
     private final @Getter Map<String, Object> options = new HashMap<>();
     private final @Getter Set<InteractionModifier> interactionModifiers = new HashSet<>();
 
@@ -62,14 +63,10 @@ public class SimpleMenu implements Menu, InventoryHolder {
     private @Setter @Getter GuiAction<InventoryClickEvent> outsideClickAction;
 
     private Inventory inventory;
-    private MenuData menuData = new MenuData();
 
     public SimpleMenu(File file, Class<Menu> clazz) {
         this.file = file;
         this.clazz = clazz;
-        // populate params
-        // populate actions
-        //
     }
 
     @Override
@@ -91,7 +88,7 @@ public class SimpleMenu implements Menu, InventoryHolder {
                 }
                 if (data.schema != null) {
                     schema.clear();
-                    schema.addAll(data.schema);
+                    schema.add(data.schema);
                 }
                 if (data.options != null) {
                     options.clear();
@@ -112,7 +109,7 @@ public class SimpleMenu implements Menu, InventoryHolder {
             // Convert current state of SimpleMenu to MenuData
             MenuData data = new MenuData();
             data.items.putAll(items);
-            data.schema.addAll(schema);
+            data.schema.addAll(schema.getSchema());
             data.options.putAll(options);
 
             // Serialize MenuData to YAML and write to file
@@ -126,17 +123,14 @@ public class SimpleMenu implements Menu, InventoryHolder {
     public void render() {
         inventory = Bukkit.createInventory(this, 9, Component.text((String) options.getOrDefault("title", "Menu")));
 
-        for (int row = 0; row < schema.size(); row++) {
-            String rowSchema = schema.get(row);
-            for (int col = 0; col < rowSchema.length(); col++) {
-                char c = rowSchema.charAt(col);
-                Icon icon = items.get(c);
-                if (icon != null) {
-                    int slot = row * 9 + col;
-                    inventory.setItem(slot, new ItemStack(Material.GOLD_BLOCK, 1));
-                }
+        schema.getCharacterMap().forEach((key, value) -> {
+            Icon icon = items.get(key);
+
+            for (Integer slot : value) {
+                inventory.setItem(slot, new ItemStack(Material.GOLD_BLOCK, 1)); //todo use icon instead
             }
-        }
+        });
+
     }
 
 
@@ -148,7 +142,7 @@ public class SimpleMenu implements Menu, InventoryHolder {
     }
 
     @Override
-    public List<String> schema() {
+    public Schema schema() {
         return this.schema;
     }
 

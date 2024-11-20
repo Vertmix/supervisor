@@ -16,7 +16,7 @@ public interface Menu extends Terminal {
     default void callback() {}
     void set(char c, Icon icon, GuiAction<InventoryClickEvent> action);
 
-    List<String> schema();
+    Schema schema();
 
     Map<String, Object> options();
     void open(Player player);
