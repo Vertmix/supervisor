@@ -7,6 +7,7 @@ import com.vertmix.supervisor.menu.entity.InteractionModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,6 +37,26 @@ public interface Menu<T> extends Terminal {
     }
 
     default void callback() {
+    }
+
+    default void disableAllInteractions() {
+        modifiers().disableAllInteractions();
+    }
+
+    default void disableInteraction(InteractionModifier modifier) {
+        modifiers().add(modifier);
+    }
+
+    default void addOption(String key, Object o) {
+        options().put(key, o);
+    }
+
+    default void schema(Collection<String> collection) {
+        schema().add(collection);
+    }
+
+        default void schema(String... objects) {
+        schema().add(objects);
     }
 
 }
