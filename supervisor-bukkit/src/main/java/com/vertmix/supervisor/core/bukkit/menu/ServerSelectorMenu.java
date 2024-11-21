@@ -27,10 +27,5 @@ public interface ServerSelectorMenu extends Menu {
 
     }
 
-    @Override
-    default void render() {
-
-    }
-
 
 }

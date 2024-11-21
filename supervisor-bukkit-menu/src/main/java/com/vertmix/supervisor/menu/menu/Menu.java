@@ -10,9 +10,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import java.util.Map;
 import java.util.Set;
 
-public interface Menu extends Terminal {
+public interface Menu<T> extends Terminal {
 
-    void render();
+    void render(T object);
 
     void set(char c, Icon icon);
 
