@@ -1,22 +1,20 @@
 package com.vertmix.supervisor.menu.service;
 
-import com.vertmix.supervisor.menu.menu.Menu;
+import com.vertmix.supervisor.menu.menu.PlayerMenu;
 import com.vertmix.supervisor.reflection.AbstractProxyHandler;
 
 import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
-public class MenuProxyHandler extends AbstractProxyHandler<Menu> {
+public class PlayerMenuProxyHandler extends AbstractProxyHandler<PlayerMenu> {
 
-    private final SimpleMenu menu;
+    private final SimplePlayerMenu menu;
 
 
-    public MenuProxyHandler(Class<Menu> serviceInterface, File file) {
+    public PlayerMenuProxyHandler(Class<PlayerMenu> serviceInterface, File file) {
         super(serviceInterface, true);
-        this.menu = new SimpleMenu(file);
+        this.menu = new SimplePlayerMenu(file);
     }
 
     @Override

@@ -3,12 +3,12 @@ package com.vertmix.supervisor.core.bukkit.menu;
 import com.vertmix.supervisor.core.annotation.Component;
 import com.vertmix.supervisor.core.annotation.Navigation;
 import com.vertmix.supervisor.core.bukkit.item.Icon;
-import com.vertmix.supervisor.menu.menu.Menu;
+import com.vertmix.supervisor.menu.menu.IMenu;
 import org.bukkit.Sound;
 
 @Component
 @Navigation(path = "/menus/server-selector.yml")
-public interface ServerSelectorMenu extends Menu {
+public interface ServerSelectorIMenu extends IMenu {
 
     @Override
     default void setup() {

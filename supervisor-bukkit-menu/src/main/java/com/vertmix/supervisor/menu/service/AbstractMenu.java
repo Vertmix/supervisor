@@ -15,17 +15,11 @@ import com.vertmix.supervisor.menu.menu.MenuModifier;
 import com.vertmix.supervisor.menu.menu.Schema;
 import lombok.Getter;
 import lombok.Setter;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
