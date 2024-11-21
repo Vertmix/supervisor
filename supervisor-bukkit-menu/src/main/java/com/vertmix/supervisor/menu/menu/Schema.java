@@ -64,6 +64,17 @@ public class Schema {
         return Math.min(6, getSchema().size());
     }
 
+    public Character getCharacter(int slot) {
+        int row = slot / 9;
+        int column = slot % 9;
+
+        if (row < schema.size() && column < schema.get(row).length()) {
+            return schema.get(row).charAt(column);
+        }
+
+        return null;
+    }
+
     private Map<Character, Set<Integer>> getSchemaSlots() {
         Map<Character, Set<Integer>> toReturn = new HashMap<>();
 

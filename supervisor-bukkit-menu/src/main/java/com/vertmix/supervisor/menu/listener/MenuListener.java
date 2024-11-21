@@ -1,6 +1,6 @@
 package com.vertmix.supervisor.menu.listener;
 
-import com.vertmix.supervisor.menu.item.GuiAction;
+import com.vertmix.supervisor.menu.entity.GuiAction;
 import com.vertmix.supervisor.menu.service.SimpleMenu;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,41 +8,39 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 
+import java.util.Optional;
+
 public class MenuListener implements Listener {
 
     @EventHandler
     public void onGuiClick(final InventoryClickEvent event) {
         if (!(event.getInventory().getHolder() instanceof SimpleMenu menu)) return;
 
-        final GuiAction<InventoryClickEvent> outsideClickAction = menu.getOutsideClickAction();
-        if (outsideClickAction != null && event.getClickedInventory() == null) {
-            outsideClickAction.run(event);
+
+        if (event.getClickedInventory() == null) {
+            // Handles if the click happened outside both menus
+            Optional.ofNullable(menu.getOutsideClickAction()).ifPresent(action -> action.run(event));
+
             return;
         }
 
-        if (event.getClickedInventory() == null) return;
+        // Default Actions (for both player and custom gui)
+        Optional.ofNullable(menu.getPlayerInventoryAction()).ifPresent(action -> action.run(event));
 
-        final GuiAction<InventoryClickEvent> defaultTopClick = menu.getDefaultTopClickAction();
-        if (defaultTopClick != null && event.getClickedInventory().getType() != InventoryType.PLAYER) {
-            defaultTopClick.run(event);
-        }
+        // Default Actions (for both player and custom gui)
+        Optional.ofNullable(menu.getDefaultClickAction()).ifPresent(action -> action.run(event));
 
-        final GuiAction<InventoryClickEvent> playerInventoryClick = menu.getPlayerInventoryAction();
-        if (playerInventoryClick != null && event.getClickedInventory().getType() == InventoryType.PLAYER) {
-            playerInventoryClick.run(event);
-        }
+        if (event.getClickedInventory().getType() == InventoryType.PLAYER)
+            return; // After this point none of the below have anything to do with the player's inventory (bottom)
 
-        final GuiAction<InventoryClickEvent> defaultClick = menu.getDefaultClickAction();
-        if (defaultClick != null) defaultClick.run(event);
+        // Default Top
+        Optional.ofNullable(menu.getDefaultTopClickAction()).ifPresent(action -> action.run(event));
 
-        final GuiAction<InventoryClickEvent> slotAction = menu.getAction(event.getSlot());
-        if (slotAction != null && event.getClickedInventory().getType() != InventoryType.PLAYER) {
-            slotAction.run(event);
-        }
+        // Slot Action (has priority over char actions)
+        Optional.ofNullable(menu.getSlotAction(event.getSlot())).ifPresent(action -> action.run(event));
 
-//todo reimplement when item action is setup!
-//    final GuiAction<InventoryClickEvent> itemAction = menu.getAction(event.getSlot());
-//    if (itemAction != null) itemAction.run(event);
+        // Char Action
+        Optional.ofNullable(menu.getCharAction(event.getSlot())).ifPresent(action -> action.run(event));
     }
 
     @EventHandler

@@ -4,6 +4,7 @@ import com.vertmix.supervisor.core.CoreProvider;
 import com.vertmix.supervisor.core.annotation.Navigation;
 import com.vertmix.supervisor.core.module.Module;
 import com.vertmix.supervisor.core.service.Services;
+import com.vertmix.supervisor.menu.listener.InteractionModifierListener;
 import com.vertmix.supervisor.menu.listener.MenuListener;
 import com.vertmix.supervisor.menu.menu.Menu;
 import com.vertmix.supervisor.menu.service.MenuProxyHandler;
@@ -22,7 +23,7 @@ public class MenuModule implements Module<Plugin> {
 
 
         Bukkit.getPluginManager().registerEvents(new MenuListener(), provider.getSource());
-
+        Bukkit.getPluginManager().registerEvents(new InteractionModifierListener(), provider.getSource());
 
         folder = provider.getPath().toFile();
         Services.register(Menu.class, clazz -> {
@@ -46,8 +47,9 @@ public class MenuModule implements Module<Plugin> {
 
             Menu menu = new MenuProxyHandler(clazz, file).getInstance();
             menu.setup();
-            menu.schema().build();
             menu.init();
+
+
             return menu;
         });
     }

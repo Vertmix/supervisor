@@ -10,9 +10,9 @@ import com.fasterxml.jackson.databind.introspect.VisibilityChecker;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.vertmix.supervisor.core.bukkit.item.Icon;
-import com.vertmix.supervisor.menu.item.GuiAction;
-import com.vertmix.supervisor.menu.menu.InteractionModifier;
+import com.vertmix.supervisor.menu.entity.GuiAction;
 import com.vertmix.supervisor.menu.menu.Menu;
+import com.vertmix.supervisor.menu.menu.MenuModifier;
 import com.vertmix.supervisor.menu.menu.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,13 +46,16 @@ public class SimpleMenu implements Menu, InventoryHolder {
             .setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY));
 
     private final File file;
-    private final Class<Menu> clazz;
 
     private final @Getter Map<Character, Icon> items = new HashMap<>();
-    private final @Getter Map<Character, GuiAction<InventoryClickEvent>> actions = new HashMap<>();
-    private final @Getter Schema schema = new Schema();
+
+    private final @Getter Map<Integer, GuiAction<InventoryClickEvent>> actions = new HashMap<>();
+    private final @Getter Map<Character, GuiAction<InventoryClickEvent>> charActions = new HashMap<>();
+
+    private final Schema schema = new Schema();
+    private final MenuModifier menuModifier = new MenuModifier();
+
     private final @Getter Map<String, Object> options = new HashMap<>();
-    private final @Getter Set<InteractionModifier> interactionModifiers = new HashSet<>();
 
     private @Setter @Getter GuiAction<InventoryClickEvent> defaultClickAction;
     private @Setter @Getter GuiAction<InventoryClickEvent> defaultTopClickAction;
@@ -64,15 +67,14 @@ public class SimpleMenu implements Menu, InventoryHolder {
 
     private Inventory inventory;
 
-    public SimpleMenu(File file, Class<Menu> clazz) {
+    public SimpleMenu(File file) {
         this.file = file;
-        this.clazz = clazz;
     }
 
     @Override
     public void init() {
         loadFile();
-
+        schema().build();
         render();
     }
 
@@ -119,6 +121,7 @@ public class SimpleMenu implements Menu, InventoryHolder {
         }
     }
 
+
     @Override
     public void render() {
         inventory = Bukkit.createInventory(this, 9, Component.text((String) options.getOrDefault("title", "Menu")));
@@ -127,23 +130,45 @@ public class SimpleMenu implements Menu, InventoryHolder {
             Icon icon = items.get(key);
 
             for (Integer slot : value) {
-                inventory.setItem(slot, new ItemStack(Material.GOLD_BLOCK, 1)); //todo use icon instead
+                inventory.setItem(slot, new ItemStack(Material.GOLD_BLOCK, 1));
             }
         });
 
+    }
+
+    @Override
+    public void set(char c, Icon icon) {
+        set(c, icon, null);
     }
 
 
     @Override
     public void set(char c, Icon icon, GuiAction<InventoryClickEvent> action) {
         items.put(c, icon);
-        actions.put(c, action);
-        System.out.println("added item!");
+
+        charActions.put(c, action);
+    }
+
+    @Override
+    public void setSlotAction(char c, GuiAction<InventoryClickEvent> action) {
+        for (Integer i : Optional.ofNullable(schema.getCharacterMap().get(c)).orElse(new HashSet<>())) {
+            actions.put(i, action);
+        }
+
+    }
+
+    @Override
+    public void setSlotAction(int slot, GuiAction<InventoryClickEvent> action) {
+        actions.put(slot, action);
     }
 
     @Override
     public Schema schema() {
         return this.schema;
+    }
+
+    @Override public MenuModifier modifiers() {
+        return menuModifier;
     }
 
     @Override
@@ -153,7 +178,6 @@ public class SimpleMenu implements Menu, InventoryHolder {
 
     @Override
     public void open(Player player) {
-        System.out.println("called?");
         player.openInventory(this.inventory);
     }
 
@@ -164,15 +188,12 @@ public class SimpleMenu implements Menu, InventoryHolder {
         return this.inventory;
     }
 
-    public GuiAction<InventoryClickEvent> getAction(int slot) {
-        int row = slot / 9;
-        int column = slot % 9;
+    public GuiAction<InventoryClickEvent> getSlotAction(int slot) {
+        return actions.get(slot);
+    }
 
-        if (row < schema.size() && column < schema.get(row).length()) {
-            char c = schema.get(row).charAt(column);
-            return actions.get(c);
-        }
-        return null;
+    public GuiAction<InventoryClickEvent> getCharAction(int slot) {
+        return charActions.get(schema.getCharacter(slot));
     }
 
     @Override
