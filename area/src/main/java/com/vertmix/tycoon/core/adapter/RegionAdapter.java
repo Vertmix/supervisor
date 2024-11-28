@@ -27,94 +27,48 @@ public class RegionAdapter extends TypeAdapter<CuboidRegion> {
             throw new IOException("Only CuboidRegion types are supported for serialization.");
         }
 
-        CuboidRegion cuboidRegion = value;
-
-        // Begin writing the region
+        // Begin writing the region object
         out.beginObject();
-        out.name("worldName").value(cuboidRegion.getWorld().getName());
+        out.name("worldName").value(value.getWorld().getName());
 
-        // Write the minimum point
-        BlockVector3 min = cuboidRegion.getMinimumPoint();
-        out.name("min").beginObject();
-        out.name("x").value(min.getX());
-        out.name("y").value(min.getY());
-        out.name("z").value(min.getZ());
+        // Write minimum point (minPoint)
+        BlockVector3 minPoint = value.getMinimumPoint();
+        out.name("minPoint").beginObject();
+        out.name("x").value(minPoint.getX());
+        out.name("y").value(minPoint.getY());
+        out.name("z").value(minPoint.getZ());
         out.endObject();
 
-        // Write the maximum point
-        BlockVector3 max = cuboidRegion.getMaximumPoint();
-        out.name("max").beginObject();
-        out.name("x").value(max.getX());
-        out.name("y").value(max.getY());
-        out.name("z").value(max.getZ());
+        // Write maximum point (maxPoint)
+        BlockVector3 maxPoint = value.getMaximumPoint();
+        out.name("maxPoint").beginObject();
+        out.name("x").value(maxPoint.getX());
+        out.name("y").value(maxPoint.getY());
+        out.name("z").value(maxPoint.getZ());
         out.endObject();
 
-        // End writing the region
+        // End writing the region object
         out.endObject();
     }
 
-
     @Override
     public CuboidRegion read(JsonReader in) throws IOException {
-        in.beginObject();
         String worldName = null;
-        BlockVector3 min = null;
-        BlockVector3 max = null;
+        BlockVector3 minPoint = null;
+        BlockVector3 maxPoint = null;
 
+        in.beginObject();
         while (in.hasNext()) {
             String name = in.nextName();
             switch (name) {
-                case "region":
-                    in.beginObject();
-                    while (in.hasNext()) {
-                        String regionField = in.nextName();
-                        switch (regionField) {
-                            case "worldName":
-                                worldName = in.nextString();
-                                break;
-                            case "min":
-                                in.beginObject();
-                                int minX = 0, minY = 0, minZ = 0;
-                                while (in.hasNext()) {
-                                    switch (in.nextName()) {
-                                        case "x":
-                                            minX = in.nextInt();
-                                            break;
-                                        case "y":
-                                            minY = in.nextInt();
-                                            break;
-                                        case "z":
-                                            minZ = in.nextInt();
-                                            break;
-                                    }
-                                }
-                                in.endObject();
-                                min = BlockVector3.at(minX, minY, minZ);
-                                break;
-                            case "max":
-                                in.beginObject();
-                                int maxX = 0, maxY = 0, maxZ = 0;
-                                while (in.hasNext()) {
-                                    switch (in.nextName()) {
-                                        case "x":
-                                            maxX = in.nextInt();
-                                            break;
-                                        case "y":
-                                            maxY = in.nextInt();
-                                            break;
-                                        case "z":
-                                            maxZ = in.nextInt();
-                                            break;
-                                    }
-                                }
-                                in.endObject();
-                                max = BlockVector3.at(maxX, maxY, maxZ);
-                                break;
-                            default:
-                                throw new JsonParseException("Unexpected field: " + regionField);
-                        }
-                    }
-                    in.endObject();
+                case "worldName":
+                    worldName = in.nextString();
+                    break;
+                case "minPoint":
+                    minPoint = readPoint(in);
+                    break;
+                case "maxPoint":
+                    maxPoint = readPoint(in);
                     break;
                 default:
                     throw new JsonParseException("Unexpected field: " + name);
@@ -122,8 +76,8 @@ public class RegionAdapter extends TypeAdapter<CuboidRegion> {
         }
         in.endObject();
 
-        if (worldName == null || min == null || max == null) {
-            throw new JsonParseException("Missing field for Region deserialization");
+        if (worldName == null || minPoint == null || maxPoint == null) {
+            throw new JsonParseException("Missing required fields for Region deserialization");
         }
 
         World bukkitWorld = Bukkit.getWorld(worldName);
@@ -131,6 +85,30 @@ public class RegionAdapter extends TypeAdapter<CuboidRegion> {
             throw new JsonParseException("World \"" + worldName + "\" is not loaded or does not exist.");
         }
 
-        return new CuboidRegion(BukkitAdapter.adapt(bukkitWorld), min, max);
+        return new CuboidRegion(BukkitAdapter.adapt(bukkitWorld), minPoint, maxPoint);
+    }
+
+    private BlockVector3 readPoint(JsonReader in) throws IOException {
+        int x = 0, y = 0, z = 0;
+
+        in.beginObject();
+        while (in.hasNext()) {
+            switch (in.nextName()) {
+                case "x":
+                    x = in.nextInt();
+                    break;
+                case "y":
+                    y = in.nextInt();
+                    break;
+                case "z":
+                    z = in.nextInt();
+                    break;
+                default:
+                    throw new JsonParseException("Unexpected field in point object");
+            }
+        }
+        in.endObject();
+
+        return BlockVector3.at(x, y, z);
     }
 }
