@@ -38,10 +38,12 @@ public abstract class AbstractMenu {
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true)
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-            .setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY));
+            .configure(MapperFeature.PROPAGATE_TRANSIENT_MARKER, true)
+            .setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.PUBLIC_ONLY));
 
     // Items
     protected final @Getter Map<Character, Icon> items = new HashMap<>();
+    protected final List<Icon> icons = new ArrayList<>();
     // Actions
     protected final @Getter Map<Integer, GuiAction<InventoryClickEvent>> actions = new HashMap<>();
     protected final @Getter Map<Character, GuiAction<InventoryClickEvent>> charActions = new HashMap<>();
@@ -132,6 +134,11 @@ public abstract class AbstractMenu {
         }
     }
 
+    public void addAll(Collection<Icon> collection) {
+        this.icons.addAll(collection);
+    }
+
+
     public void setSlotAction(int slot, GuiAction<InventoryClickEvent> action) {
         actions.put(slot, action);
     }
@@ -148,16 +155,7 @@ public abstract class AbstractMenu {
         return this.options;
     }
 
-    public void open(Player player) {
-        this.inventory = Bukkit.createInventory(player, 9, Component.text((String) options.getOrDefault("title", "Menu")));
-        render();
-
-        player.openInventory(this.inventory);
-
-    }
-
-    ;
-
+    public abstract void open(Player player);
 
     public GuiAction<InventoryClickEvent> getSlotAction(int slot) {
         return actions.get(slot);

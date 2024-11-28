@@ -1,12 +1,11 @@
 package com.vertmix.supervisor.core.bukkit.item;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-@AllArgsConstructor
 public class Icon {
 
     public Material material;
@@ -15,7 +14,18 @@ public class Icon {
     public List<String> lore;
     public int customModelData = 0;
 
+    public Icon(Material material, int amount, String name, List<String> lore, int customModelData) {
+        this.material = material;
+        this.amount = amount;
+        this.name = name;
+        this.lore = lore;
+        this.customModelData = customModelData;
+    }
+
+    @JsonIgnore
     private transient ItemStack itemStack;
+
+    public Icon()  {}
 
     public Icon(Material material) {
         this.material = material;
@@ -33,6 +43,7 @@ public class Icon {
         this.lore = lore;
     }
 
+    @JsonIgnore
     public ItemStack getItemstack() {
 
         if (itemStack == null) {

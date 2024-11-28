@@ -1,6 +1,7 @@
 package com.vertmix.supervisor.menu.listener;
 
 import com.vertmix.supervisor.menu.api.GuiAction;
+import com.vertmix.supervisor.menu.service.AbstractMenu;
 import com.vertmix.supervisor.menu.service.SimpleMenu;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,7 +15,7 @@ public class MenuListener implements Listener {
 
     @EventHandler
     public void onGuiClick(final InventoryClickEvent event) {
-        if (!(event.getInventory().getHolder() instanceof SimpleMenu menu)) return;
+        if (!(event.getInventory().getHolder() instanceof AbstractMenu menu)) return;
 
 
         if (event.getClickedInventory() == null) {
@@ -45,7 +46,7 @@ public class MenuListener implements Listener {
 
     @EventHandler
     public void onGuiDrag(final InventoryDragEvent event) {
-        if (!(event.getInventory().getHolder() instanceof SimpleMenu menu)) return;
+        if (!(event.getInventory().getHolder() instanceof AbstractMenu menu)) return;
 
         final GuiAction<InventoryDragEvent> dragAction = menu.getDragAction();
         if (dragAction != null) dragAction.run(event);

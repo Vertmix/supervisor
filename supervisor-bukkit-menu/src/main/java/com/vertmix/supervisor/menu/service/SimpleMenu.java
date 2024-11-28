@@ -5,6 +5,7 @@ import com.vertmix.supervisor.menu.api.IMenu;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -33,10 +34,12 @@ public class SimpleMenu extends AbstractMenu implements InventoryHolder, IMenu {
         inventory = Bukkit.createInventory(this, 9, Component.text((String) options.getOrDefault("title", "Menu")));
 
         schema.getCharacterMap().forEach((key, value) -> {
+            System.out.println(key + " RENDERING");
             Icon icon = items.get(key);
 
             for (Integer slot : value) {
-                inventory.setItem(slot, new ItemStack(Material.GOLD_BLOCK, 1));
+                System.out.println("set slot ?" + icon.material);
+                inventory.setItem(slot, icon.getItemstack());
             }
         });
 
@@ -46,7 +49,13 @@ public class SimpleMenu extends AbstractMenu implements InventoryHolder, IMenu {
     public @NotNull Inventory getInventory() {
         if (inventory == null)
             throw new NullPointerException("Could not create menu");
+        render();
         return this.inventory;
+    }
+
+    @Override
+    public void open(Player player) {
+        player.openInventory(getInventory());
     }
 
     @Override

@@ -1,12 +1,12 @@
 package com.vertmix.supervisor.module.loader;
 
 import com.vertmix.supervisor.core.CoreProvider;
-import com.vertmix.supervisor.core.annotation.ModuleDependency;
 import com.vertmix.supervisor.core.annotation.ModuleInfo;
 import com.vertmix.supervisor.core.module.Module;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -16,70 +16,40 @@ import java.util.stream.Stream;
 
 public class ModuleLoader {
 
-    private static final Map<String, Module> loadedModules = new LinkedHashMap<>();
-    private static final Map<String, List<String>> moduleDependencies = new HashMap<>();
-    private static final Set<String> enabledModules = new HashSet<>();
+    private static final Map<String, Module<?>> loadedModules = new LinkedHashMap<>();
+    private static final Set<String> enabledModules = new LinkedHashSet<>();
 
     public static void register(CoreProvider<?> provider) {
         Path modulesPath = provider.getPath().resolve("modules");
 
         try {
-            // Create the modules folder if it does not exist
+            // Ensure the modules directory exists
             if (Files.notExists(modulesPath)) {
                 Files.createDirectories(modulesPath);
             }
 
-            // Clean up the directory: remove any files that are not .jar but keep folders
+            System.out.println("Scanning module directory: " + modulesPath);
+
+            // Clean up the directory: Remove non-JAR files
             try (Stream<Path> files = Files.list(modulesPath)) {
                 files.filter(Files::isRegularFile)
                         .filter(file -> !file.toString().endsWith(".jar"))
                         .forEach(ModuleLoader::deleteFile);
             }
 
-            // Load all .jar files and extract module dependencies
+            // Load all JAR files
             try (Stream<Path> jarFiles = Files.list(modulesPath)) {
                 List<Path> jarPaths = jarFiles.filter(file -> file.toString().endsWith(".jar")).toList();
+                System.out.println("JAR files found: " + jarPaths);
+
                 for (Path jarPath : jarPaths) {
-                    try (JarFile jarFile = new JarFile(jarPath.toFile())) {
-                        Enumeration<JarEntry> entries = jarFile.entries();
-                        while (entries.hasMoreElements()) {
-                            JarEntry entry = entries.nextElement();
-                            String name = entry.getName();
-
-                            if (name.endsWith(".class")) {
-                                String className = name.replace('/', '.').replace(".class", "");
-                                try {
-                                    Class<?> clazz = Class.forName(className, true, ModuleLoader.class.getClassLoader());
-
-                                    if (clazz.isAnnotationPresent(ModuleInfo.class) && Module.class.isAssignableFrom(clazz)) {
-                                        Module module = (Module) clazz.getDeclaredConstructor().newInstance();
-                                        ModuleInfo moduleInfo = clazz.getAnnotation(ModuleInfo.class);
-                                        ModuleDependency moduleDependency = clazz.getAnnotation(ModuleDependency.class);
-
-                                        if (moduleDependency != null) {
-                                            moduleDependencies.put(moduleInfo.name(), Arrays.asList(moduleDependency.dependencies()));
-                                        } else {
-                                            moduleDependencies.put(moduleInfo.name(), Collections.emptyList());
-                                        }
-
-                                        loadedModules.put(moduleInfo.name(), module);
-                                    }
-                                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                                    System.err.println("Failed to load class: " + className);
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    } catch (IOException e) {
-                        System.err.println("Failed to read jar file: " + jarPath);
-                        e.printStackTrace();
-                    }
+                    loadModuleJar(provider, jarPath);
                 }
             }
 
-            // Enable modules in dependency order
+            // Enable modules
             for (String moduleName : loadedModules.keySet()) {
-                enableModule(provider, moduleName, modulesPath);
+                enableModule(provider, moduleName);
             }
 
             System.out.println("Successfully loaded and enabled " + enabledModules.size() + " modules.");
@@ -94,7 +64,7 @@ public class ModuleLoader {
         Collections.reverse(modulesToDisable); // Disable in reverse order of enabling to respect dependencies
 
         for (String moduleName : modulesToDisable) {
-            Module module = loadedModules.get(moduleName);
+            Module<?> module = loadedModules.get(moduleName);
             if (module != null) {
                 module.onDisable();
                 enabledModules.remove(moduleName);
@@ -114,33 +84,53 @@ public class ModuleLoader {
         }
     }
 
-    private static void enableModule(CoreProvider<?> provider, String moduleName, Path modulesPath) {
+    private static void loadModuleJar(CoreProvider<?> provider, Path jarPath) {
+        try (JarFile jarFile = new JarFile(jarPath.toFile());
+             URLClassLoader classLoader = new URLClassLoader(
+                     new URL[]{jarPath.toUri().toURL()},
+                     ModuleLoader.class.getClassLoader())) {
+
+
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                String name = entry.getName();
+
+                if (name.endsWith(".class")  && name.contains("demo") && !name.contains("module-info")) {
+                    String className = name.replace('/', '.').replace(".class", "");
+                    System.out.println("Attempting to load class: " + className);
+
+                    try {
+                        Class<?> clazz = classLoader.loadClass(className);
+                        Module<?> module = (Module<?>) clazz.getDeclaredConstructor().newInstance();
+                        loadedModules.put("demo", module);
+//                        if (clazz.isAnnotationPresent(ModuleInfo.class) && Module.class.isAssignableFrom(clazz)) {
+//                            Module<?> module = (Module<?>) clazz.getDeclaredConstructor().newInstance();
+//                            ModuleInfo moduleInfo = clazz.getAnnotation(ModuleInfo.class);
+//
+//                            System.out.println("Module detected: " + moduleInfo.name());
+//
+//                            loadedModules.put(moduleInfo.name(), module);
+//                        }
+                    } catch (Exception e) {
+                        System.err.println("Failed to load class: " + className);
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to read JAR file: " + jarPath);
+            e.printStackTrace();
+        }
+    }
+
+    private static void enableModule(CoreProvider provider, String moduleName) {
         if (enabledModules.contains(moduleName)) {
             return; // Module already enabled
         }
 
-        List<String> dependencies = moduleDependencies.get(moduleName);
-        if (dependencies != null) {
-            for (String dependency : dependencies) {
-                if (!enabledModules.contains(dependency)) {
-                    enableModule(provider, dependency, modulesPath);
-                }
-            }
-        }
-
-          Module module = loadedModules.get(moduleName);
+        Module<?> module = loadedModules.get(moduleName);
         if (module != null) {
-            Path modulePath = modulesPath.resolve(moduleName);
-            try {
-                // Create a directory for the module if it doesn't exist
-                if (Files.notExists(modulePath)) {
-                    Files.createDirectories(modulePath);
-                }
-            } catch (IOException e) {
-                System.err.println("Failed to create directory for module: " + moduleName);
-                e.printStackTrace();
-            }
-
             module.onEnable(provider);
             enabledModules.add(moduleName);
             System.out.println("Enabled module: " + moduleName);

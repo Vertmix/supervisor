@@ -2,6 +2,8 @@ package com.vertmix.supervisor.menu.service;
 
 import com.vertmix.supervisor.core.bukkit.item.Icon;
 import com.vertmix.supervisor.menu.api.IMenu;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import java.io.File;
@@ -36,6 +38,12 @@ public class SimplePlayerMenu extends AbstractMenu implements IMenu {
         });
     }
 
+    @Override
+    public void open(Player player) {
+        inventory = Bukkit.createInventory(player, schema.size() * 9, options.getOrDefault("title", "Menu").toString());
+        render();
+        player.openInventory(inventory);
+    }
 
     @Override
     public void close() throws IOException {

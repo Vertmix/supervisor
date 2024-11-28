@@ -37,7 +37,8 @@ public interface IMenu extends Terminal {
     default void setup() {
     }
 
-    default void callback() {
+    default void fallback(Player player) {
+
     }
 
     default void disableAllInteractions() {
@@ -59,5 +60,7 @@ public interface IMenu extends Terminal {
     default void schema(String... objects) {
         schema().add(objects);
     }
+
+    void addAll(Collection<Icon> collection);
 
 }

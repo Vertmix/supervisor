@@ -33,6 +33,9 @@ dependencies {
     implementation(project(":supervisor-bukkit-item"))
     implementation(project(":supervisor-adapter"))
     implementation(project(":supervisor-adapter-bukkit"))
+    implementation(project(":supervisor-module-loader"))
+
+    implementation(project(":supervisor-bukkit-menu"))
 
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
     compileOnly("org.projectlombok:lombok:1.18.36")

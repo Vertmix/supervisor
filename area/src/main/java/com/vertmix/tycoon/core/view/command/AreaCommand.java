@@ -2,11 +2,7 @@ package com.vertmix.tycoon.core.view.command;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.PaperCommandManager;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Description;
-import co.aikar.commands.annotation.Single;
+import co.aikar.commands.annotation.*;
 import co.aikar.commands.contexts.OnlinePlayer;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -18,6 +14,8 @@ import com.sk89q.worldedit.world.World;
 import com.vertmix.supervisor.core.annotation.Component;
 import com.vertmix.tycoon.core.controller.AreaController;
 import com.vertmix.tycoon.core.model.Area;
+import com.vertmix.tycoon.core.view.menu.ExampleMenu;
+import com.vertmix.tycoon.core.view.menu.ExamplePagerMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -29,8 +27,13 @@ public class AreaCommand extends BaseCommand {
     private final AreaController areaController;
     private final WorldEditPlugin worldEditPlugin;
 
-    public AreaCommand(AreaController areaController, PaperCommandManager commandManager) {
+    private final ExampleMenu exampleMenu;
+    private final ExamplePagerMenu examplePagerMenu;
+
+    public AreaCommand(AreaController areaController, PaperCommandManager commandManager, ExampleMenu exampleMenu, ExamplePagerMenu examplePagerMenu) {
         this.areaController = areaController;
+        this.exampleMenu = exampleMenu;
+        this.examplePagerMenu = examplePagerMenu;
         this.worldEditPlugin = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
         commandManager.registerCommand(this);
     }
@@ -68,5 +71,20 @@ public class AreaCommand extends BaseCommand {
         } else {
             player.sendMessage("§cThis area already exists!");
         }
+    }
+
+    @Subcommand("global")
+    public void onGlobal(Player player) {
+        exampleMenu.open(player);
+    }
+
+    @Subcommand("player")
+    public void onPlayer(Player player) {
+
+    }
+
+    @Subcommand("paging")
+    public void onPaging(Player player) {
+        examplePagerMenu.open(player);
     }
 }

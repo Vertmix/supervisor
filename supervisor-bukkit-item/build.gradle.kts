@@ -37,4 +37,6 @@ subprojects {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+    compileOnly("com.fasterxml.jackson.core:jackson-annotations:2.15.2")
+
 }
