@@ -1,6 +1,7 @@
 package com.vertmix.supervisor.core.service;
 
 import com.vertmix.supervisor.core.annotation.Component;
+import com.vertmix.supervisor.core.terminable.Terminal;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -15,32 +16,20 @@ public class Services {
     private static final Map<Class<?>, Function<?, ?>> factories = new HashMap<>();
     private static final Map<Class<?>, Object> services = new HashMap<>();
     private static final Set<Consumer<Object>> consumers = new HashSet<>();
-    private static final Set<Consumer<Class<?>>> clazzConsumer = new HashSet<>();
 
-    public static final Set<Class<?>> clazzes = new HashSet<>();
 
     // Run the registered consumer for the given type
     public static <T> void register(Class<T> clazz, Function<Class<T>, T> function) {
         factories.put(clazz, function);
     }
 
-
-
     // Register a consumer for a specific type
     public static <T> void registerConsumer(Consumer<Object> consumer) {
         consumers.add(consumer);
     }
-    public static <T> void registerClazzConsumer(Consumer<Class<?>> consumer) {
-        clazzConsumer.add(consumer);
-    }
-
 
     public static void runConsumer(Object type) {
         consumers.forEach(consumer -> consumer.accept(type));
-    }
-
-    public static void runClazzConsumer(Class<?> type) {
-        clazzConsumer.forEach(consumer -> consumer.accept(type));
     }
 
     public static void registerProcess(Class<? extends Annotation> clazz) {
@@ -132,5 +121,9 @@ public class Services {
 
     public static Set<Class<? extends Annotation>> getProcessable() {
         return processable;
+    }
+
+    public static void kill() {
+        services.values().stream().filter(o -> o instanceof Terminal).map(o -> (Terminal)o).forEach(Terminal::closeSilently);
     }
 }

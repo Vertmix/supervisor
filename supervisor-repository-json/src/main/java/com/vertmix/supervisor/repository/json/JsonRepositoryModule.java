@@ -1,7 +1,6 @@
 package com.vertmix.supervisor.repository.json;
 
 import com.vertmix.supervisor.core.CoreProvider;
-import com.vertmix.supervisor.core.annotation.ModulePriority;
 import com.vertmix.supervisor.core.annotation.Navigation;
 import com.vertmix.supervisor.core.module.Module;
 import com.vertmix.supervisor.core.service.Services;
