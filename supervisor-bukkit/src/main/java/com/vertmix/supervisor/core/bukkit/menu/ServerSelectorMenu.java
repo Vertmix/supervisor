@@ -4,6 +4,7 @@ import com.vertmix.supervisor.core.annotation.Component;
 import com.vertmix.supervisor.core.annotation.Navigation;
 import com.vertmix.supervisor.core.bukkit.item.Icon;
 import com.vertmix.supervisor.menu.api.Menu;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 
 @Component
@@ -20,7 +21,7 @@ public interface ServerSelectorMenu extends Menu {
         options().put("title", "demo");
         options().put("click_sound", Sound.AMBIENT_CAVE.name());
 
-        set('#', new Icon(), event -> {
+        set('#', new Icon(Material.GOLD_BLOCK, 1), event -> {
             System.out.println("Clicked!");
         });
 

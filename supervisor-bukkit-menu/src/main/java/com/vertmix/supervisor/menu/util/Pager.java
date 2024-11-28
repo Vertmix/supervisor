@@ -7,7 +7,6 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 public class Pager {
@@ -29,7 +28,7 @@ public class Pager {
         if (items == null)
             throw new MenuException("Items list cannot be null");
 
-        this.pageSize = menu.schema().getCharacterMap().getOrDefault(PAGED_KEY, new HashSet<>()).size();
+        this.pageSize = menu.schema().getCharacterMap().getOrDefault(PAGED_KEY, List.of()).size();
         if (pageSize == 0)
             throw new MenuException("Page size must be greater than zero");
 
@@ -40,19 +39,42 @@ public class Pager {
         if (pageNumber < 1)
             throw new MenuException("Page number must be greater than zero");
 
-        int fromIndex = (pageNumber - 1) * pageSize;
+        int fromIndex = pageNumber * pageSize;
 
         if (fromIndex >= items.size()) {
             return Collections.emptyList();
         }
 
         int toIndex = Math.min(fromIndex + pageSize, items.size());
+
         return items.subList(fromIndex, toIndex);
 
     }
 
     public void next() {
-        page++;
+        this.page = clamped(getTotalPages(), page + 1);
+
+        render();
+    }
+
+    public void previous() {
+        this.page = clamped(getTotalPages(), page - 1);
+
+        render();
+    }
+
+    public void render() {
+        final List<Icon> pageContent = getPage(page);
+
+        final List<Integer> slots = menu.schema().getCharacterMap().get(PAGED_KEY);
+
+        for (int i = 0; i < slots.size(); i++) {
+
+            final int slot = slots.get(i);
+            final Icon icon = pageContent.get(i);
+
+            menu.getInventory().setItem(slot, icon.getItemstack());
+        }
     }
 
     public int getTotalPages() {
@@ -65,5 +87,9 @@ public class Pager {
 
     public boolean hasPreviousPage() {
         return page > 0 && page <= getTotalPages();
+    }
+
+    private int clamped(int max, int current) {
+        return Math.max(0, Math.min(max, current));
     }
 }

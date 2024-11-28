@@ -10,12 +10,16 @@ import java.util.List;
 public class Icon {
 
     public Material material;
-    public int amount = 0;
+    public int amount = 1;
     public String name;
     public List<String> lore;
     public int customModelData = 0;
 
     private transient ItemStack itemStack;
+
+    public Icon(Material material) {
+        this.material = material;
+    }
 
     public Icon(Material material, int amount) {
         this.material = material;

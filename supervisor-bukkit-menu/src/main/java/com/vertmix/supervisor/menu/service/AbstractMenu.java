@@ -15,11 +15,14 @@ import com.vertmix.supervisor.menu.menu.MenuModifier;
 import com.vertmix.supervisor.menu.menu.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.inventory.Inventory;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,21 +39,28 @@ public abstract class AbstractMenu {
             .configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true)
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY));
+
+    // Items
     protected final @Getter Map<Character, Icon> items = new HashMap<>();
+    // Actions
     protected final @Getter Map<Integer, GuiAction<InventoryClickEvent>> actions = new HashMap<>();
     protected final @Getter Map<Character, GuiAction<InventoryClickEvent>> charActions = new HashMap<>();
+    // Menu configurations
     protected final Schema schema = new Schema();
     protected final MenuModifier menuModifier = new MenuModifier();
     protected final @Getter Map<String, Object> options = new HashMap<>();
+    // File location
     private final File file;
-    protected @Setter
-    @Getter GuiAction<InventoryClickEvent> defaultClickAction;
+    // Inventory
+    protected @Getter Inventory inventory;
+    // Actions
+    protected @Setter @Getter GuiAction<InventoryClickEvent> defaultClickAction;
     protected @Setter @Getter GuiAction<InventoryClickEvent> defaultTopClickAction;
     protected @Setter @Getter GuiAction<InventoryClickEvent> playerInventoryAction;
     protected @Setter @Getter GuiAction<InventoryDragEvent> dragAction;
     protected @Setter @Getter GuiAction<InventoryCloseEvent> closeGuiAction;
     protected @Setter @Getter GuiAction<InventoryOpenEvent> openGuiAction;
-    private @Setter @Getter GuiAction<InventoryClickEvent> outsideClickAction;
+    protected @Setter @Getter GuiAction<InventoryClickEvent> outsideClickAction;
 
 
     public AbstractMenu(File file) {
@@ -117,10 +127,9 @@ public abstract class AbstractMenu {
     }
 
     public void setSlotAction(char c, GuiAction<InventoryClickEvent> action) {
-        for (Integer i : Optional.ofNullable(schema.getCharacterMap().get(c)).orElse(new HashSet<>())) {
+        for (Integer i : Optional.ofNullable(schema.getCharacterMap().get(c)).orElse(List.of())) {
             actions.put(i, action);
         }
-
     }
 
     public void setSlotAction(int slot, GuiAction<InventoryClickEvent> action) {
@@ -139,7 +148,15 @@ public abstract class AbstractMenu {
         return this.options;
     }
 
-    public abstract void open(Player player);
+    public void open(Player player) {
+        this.inventory = Bukkit.createInventory(player, 9, Component.text((String) options.getOrDefault("title", "Menu")));
+        render();
+
+        player.openInventory(this.inventory);
+
+    }
+
+    ;
 
 
     public GuiAction<InventoryClickEvent> getSlotAction(int slot) {

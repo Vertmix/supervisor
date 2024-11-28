@@ -9,7 +9,7 @@ public class Schema {
 
     private final @Getter List<String> schema = new ArrayList<>();
 
-    private final @Getter Map<Character, Set<Integer>> characterMap = new HashMap<>();
+    private final @Getter Map<Character, List<Integer>> characterMap = new HashMap<>();
 
     public Schema add(String row) {
         schema.add(row);
@@ -75,8 +75,8 @@ public class Schema {
         return null;
     }
 
-    private Map<Character, Set<Integer>> getSchemaSlots() {
-        Map<Character, Set<Integer>> toReturn = new HashMap<>();
+    private Map<Character, List<Integer>> getSchemaSlots() {
+        Map<Character, List<Integer>> toReturn = new HashMap<>();
 
         int inventorySize = (schema.size() * 9) - 1;
 
@@ -91,7 +91,7 @@ public class Schema {
                 if (slot > inventorySize)
                     break;
 
-                toReturn.putIfAbsent(character, new HashSet<>());
+                toReturn.putIfAbsent(character, new ArrayList<>());
                 toReturn.get(character).add(slot);
             }
         }

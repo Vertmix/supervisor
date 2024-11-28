@@ -3,6 +3,7 @@ package com.vertmix.supervisor.core.bukkit.menu;
 import com.vertmix.supervisor.core.bukkit.item.Icon;
 import com.vertmix.supervisor.menu.api.PlayerMenu;
 import com.vertmix.supervisor.menu.entity.InteractionModifier;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 public interface PlayerLevelMenu extends PlayerMenu {
@@ -18,7 +19,7 @@ public interface PlayerLevelMenu extends PlayerMenu {
 
         addOption("title", "example");
 
-        set('#', new Icon(), event -> {
+        set('#', new Icon(Material.GOLD_BLOCK), event -> {
             System.out.println("Clicked!");
         });
 
