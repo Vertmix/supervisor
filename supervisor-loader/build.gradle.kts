@@ -7,11 +7,6 @@ dependencies {
     implementation(project(":supervisor-core"))
     implementation(project(":supervisor-reflection"))
     implementation(project(":supervisor-repository"))
-<<<<<<< HEAD
-=======
-    implementation(project(":supervisor-repository-json"))
-
->>>>>>> feature/loader
     implementation("com.google.code.gson:gson:2.10.1")
 
 }

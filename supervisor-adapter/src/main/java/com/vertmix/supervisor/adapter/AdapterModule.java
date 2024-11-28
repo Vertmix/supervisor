@@ -20,25 +20,25 @@ public class AdapterModule implements Module<Object> {
     public void onEnable(CoreProvider<Object> provider) {
         System.out.println("Testing???");
 //        Services.registerProcess(Adapter.class);
-        Services.clazzes.forEach(clazz -> {
-            if (clazz.isAnnotationPresent(Adapter.class)) {
-                try {
-                    System.out.println("Is adapter class: " + clazz.getSimpleName());
-                    Constructor<?> constructor = clazz.getConstructor(); // Correct usage
-                    TypeAdapter<?> adapterInstance = (TypeAdapter<?>) constructor.newInstance();
-                    System.out.println("???");
-                    System.out.println(clazz.getSimpleName());
-                    System.out.println(getGenericType(clazz).getSimpleName());
-                    System.out.println(adapterInstance.getClass().getSimpleName());
-                    gsonBuilder.registerTypeAdapter(getGenericType(clazz), adapterInstance);
-
-                    Bukkit.getLogger().info("Registered adapter " + clazz.getSimpleName().replaceAll("Class", ""));
-                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                    System.err.println("Failed to instantiate adapter: " + clazz.getSimpleName());
-                    e.printStackTrace();
-                }
-            }
-        });
+//        Services.clazzes.forEach(clazz -> {
+//            if (clazz.isAnnotationPresent(Adapter.class)) {
+//                try {
+//                    System.out.println("Is adapter class: " + clazz.getSimpleName());
+//                    Constructor<?> constructor = clazz.getConstructor(); // Correct usage
+//                    TypeAdapter<?> adapterInstance = (TypeAdapter<?>) constructor.newInstance();
+//                    System.out.println("???");
+//                    System.out.println(clazz.getSimpleName());
+//                    System.out.println(getGenericType(clazz).getSimpleName());
+//                    System.out.println(adapterInstance.getClass().getSimpleName());
+//                    gsonBuilder.registerTypeAdapter(getGenericType(clazz), adapterInstance);
+//
+//                    Bukkit.getLogger().info("Registered adapter " + clazz.getSimpleName().replaceAll("Class", ""));
+//                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+//                    System.err.println("Failed to instantiate adapter: " + clazz.getSimpleName());
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
 
 
         GSON = gsonBuilder.create();

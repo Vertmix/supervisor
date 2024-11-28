@@ -8,10 +8,7 @@ import org.reflections.util.ConfigurationBuilder;
 
 import java.lang.reflect.Constructor;
 import java.util.Collection;
-<<<<<<< HEAD
-=======
-import java.util.Set;
->>>>>>> feature/loader
+
 import java.util.stream.Collectors;
 
 public class ReflectionUtil {
@@ -41,7 +38,7 @@ public class ReflectionUtil {
                 .setScanners(new SubTypesScanner(false)));
 
         // Collect all classes in the package
-       return reflections.getAll(new SubTypesScanner(false)).stream().filter(x -> x.startsWith(packageName)).map(x -> {
+        return reflections.getAll(new SubTypesScanner(false)).stream().filter(x -> x.startsWith(packageName)).map(x -> {
             try {
                 return Class.forName(x);
             } catch (ClassNotFoundException e) {
@@ -51,8 +48,4 @@ public class ReflectionUtil {
         }).collect(Collectors.toSet());
 
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> feature/loader

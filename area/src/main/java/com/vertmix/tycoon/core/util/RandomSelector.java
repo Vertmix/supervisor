@@ -55,9 +55,9 @@ public interface RandomSelector<E> {
      * @param <E> the element type
      * @return the selector instance
      */
-    static <E extends Weighted> RandomSelector<E> weighted(Collection<E> elements) {
-        return weighted(elements, Weighted.WEIGHER);
-    }
+//    static <E extends Weighted> RandomSelector<E> weighted(Collection<E> elements) {
+//        return weighted(elements, Weighted.WEIGHER);
+//    }
 
     /**
      * Creates a weighted selector which picks elements using their weight,
@@ -67,9 +67,9 @@ public interface RandomSelector<E> {
      * @param <E> the element type
      * @return the selector instance
      */
-    static <E> RandomSelector<E> weighted(Collection<E> elements, Weigher<? super E> weigher) {
-        return RandomSelectorImpl.weighted(elements, weigher);
-    }
+//    static <E> RandomSelector<E> weighted(Collection<E> elements, Weigher<? super E> weigher) {
+//        return RandomSelectorImpl.weighted(elements, weigher);
+//    }
 
     /**
      * Randomly pick an element.

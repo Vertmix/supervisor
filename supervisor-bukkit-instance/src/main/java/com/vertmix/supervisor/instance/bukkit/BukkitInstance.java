@@ -35,6 +35,11 @@ public class BukkitInstance implements Instance<Player> {
 
     }
 
+    @Override
+    public void msg(Player player, String text) {
+
+    }
+
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         InstanceData instanceData;

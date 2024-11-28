@@ -26,6 +26,7 @@
 package com.vertmix.tycoon.core.util;
 
 import com.google.common.base.Preconditions;
+import com.google.common.cache.Weigher;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -45,33 +46,33 @@ final class RandomSelectorImpl<E> implements RandomSelector<E> {
         return new RandomSelectorImpl<>(array, new BoundedRandomSelector(size));
     }
 
-    static <E> RandomSelector<E> weighted(Collection<E> elements, Weigher<? super E> weigher) {
-        Objects.requireNonNull(elements, "elements must not be null");
-        Objects.requireNonNull(weigher, "weigher must not be null");
-        Preconditions.checkArgument(!elements.isEmpty(), "elements must not be empty");
-
-        int size = elements.size();
-
-        //noinspection unchecked
-        E[] elementArray = elements.toArray((E[]) new Object[size]);
-
-        double totalWeight = 0d;
-        double[] probabilities = new double[size];
-
-        for (int i = 0; i < size; i++) {
-            double weight = weigher.weigh(elementArray[i]);
-            Preconditions.checkArgument(weight > 0d, "weigher returned a negative number");
-
-            probabilities[i] = weight;
-            totalWeight += weight;
-        }
-
-        for (int i = 0; i < size; i++) {
-            probabilities[i] /= totalWeight;
-        }
-
-        return new RandomSelectorImpl<>(elementArray, new WeightedSelector(probabilities));
-    }
+//    static <E> RandomSelector<E> weighted(Collection<E> elements, Weigher<? super E> weigher) {
+//        Objects.requireNonNull(elements, "elements must not be null");
+//        Objects.requireNonNull(weigher, "weigher must not be null");
+//        Preconditions.checkArgument(!elements.isEmpty(), "elements must not be empty");
+//
+//        int size = elements.size();
+//
+//        //noinspection unchecked
+//        E[] elementArray = elements.toArray((E[]) new Object[size]);
+//
+//        double totalWeight = 0d;
+//        double[] probabilities = new double[size];
+//
+//        for (int i = 0; i < size; i++) {
+//            double weight = weigher.weigh(elementArray[i]);
+//            Preconditions.checkArgument(weight > 0d, "weigher returned a negative number");
+//
+//            probabilities[i] = weight;
+//            totalWeight += weight;
+//        }
+//
+//        for (int i = 0; i < size; i++) {
+//            probabilities[i] /= totalWeight;
+//        }
+//
+//        return new RandomSelectorImpl<>(elementArray, new WeightedSelector(probabilities));
+//    }
 
     private final E[] elements;
     private final IndexSelector selection;

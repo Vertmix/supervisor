@@ -36,7 +36,7 @@ public interface Weighted {
      * An instance of {@link Weigher} which uses the {@link #getWeight()} method
      * to determine weight.
      */
-    Weigher<? super Weighted> WEIGHER = Weighted::getWeight;
+//    Weigher<? super Weighted> WEIGHER = Weighted::getWeight;
 
     /**
      * Gets the weight of this entry.

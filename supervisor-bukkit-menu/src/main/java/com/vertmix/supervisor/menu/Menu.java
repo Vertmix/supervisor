@@ -2,6 +2,7 @@ package com.vertmix.supervisor.menu;
 
 import com.vertmix.supervisor.core.bukkit.item.Icon;
 import com.vertmix.supervisor.core.terminable.Terminal;
+import com.vertmix.supervisor.menu.entity.GuiAction;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 

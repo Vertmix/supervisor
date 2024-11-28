@@ -9,7 +9,7 @@ import java.util.*;
 
 public class ModuleUtil {
 
-        public static Set<Module> loadModules(Collection<Class<?>> classes, CoreProvider<?> provider) {
+    public static Set<Module> loadModules(Collection<Class<?>> classes, CoreProvider<?> provider) {
         Map<String, Module> modulesMap = new HashMap<>();
         Map<String, List<String>> moduleDependencies = new HashMap<>();
         Set<Module> enabledModules = new LinkedHashSet<>();
@@ -49,7 +49,7 @@ public class ModuleUtil {
         return enabledModules;
     }
 
-        private static void enableModuleWithDependencies(String moduleName, Map<String, Module> modulesMap,
+    private static void enableModuleWithDependencies(String moduleName, Map<String, Module> modulesMap,
                                                      Map<String, List<String>> moduleDependencies, Set<Module> enabledModules,
                                                      Set<String> visited, CoreProvider<?> provider) throws Exception {
         if (visited.contains(moduleName)) {
@@ -74,8 +74,4 @@ public class ModuleUtil {
             }
         }
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> feature/loader

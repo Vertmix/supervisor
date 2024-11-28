@@ -11,13 +11,17 @@ import static com.vertmix.supervisor.loader.util.ModuleUtil.loadModules;
 
 public class SupervisorLoader {
 
-    public static void register(CoreProvider<?> provider) {
+    public static void register(CoreProvider<?> provider, Object... objects) {
         String packageName = provider.getClass().getPackage().getName();
         ClassLoader classLoader = provider.getClass().getClassLoader();
 
         Collection<Class<?>> classes = ReflectionUtil.findClasses(packageName, classLoader);
 
         loadModules(classes, provider);
+
+        for (Object object : objects)
+            Services.register(object.getClass(), object);
+
         registerComponents(classes);
     }
 
@@ -25,8 +29,4 @@ public class SupervisorLoader {
         Services.kill();
     }
 
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> feature/loader

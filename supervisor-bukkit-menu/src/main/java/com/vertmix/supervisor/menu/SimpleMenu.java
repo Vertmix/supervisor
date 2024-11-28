@@ -13,6 +13,8 @@ import com.vertmix.supervisor.configuration.ConfigModule;
 import com.vertmix.supervisor.configuration.ConfigService;
 import com.vertmix.supervisor.configuration.yml.YamlConfigService;
 import com.vertmix.supervisor.core.bukkit.item.Icon;
+import com.vertmix.supervisor.menu.entity.GuiAction;
+import com.vertmix.supervisor.menu.entity.InteractionModifier;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

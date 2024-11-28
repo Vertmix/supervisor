@@ -16,10 +16,10 @@ public interface DummyMenu extends Menu {
     default void setup() {
         schema("####@####");
 
-        set('#', new Icon(Material.STONE), event -> {
-            event.getWhoClicked().playSound((Sound) options().getOrDefault("sound", Sound.BLOCK_NOTE_BLOCK_BANJO));
-        });
-        set('@', new Icon(Material.APPLE), event -> {});
+//        set('#', new Icon(Material.STONE), event -> {
+//            event.getWhoClicked().playSound((Sound) options().getOrDefault("sound", Sound.BLOCK_NOTE_BLOCK_BANJO));
+//        });
+//        set('@', new Icon(Material.APPLE), event -> {});
 
         disableAllInteractions();
         disableInteraction(InteractionModifier.PREVENT_ITEM_DROP);

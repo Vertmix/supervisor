@@ -31,7 +31,7 @@ public class ComponentUtil {
         }
     }
 
-        private static void registerComponent(Class<?> clazz) throws Exception {
+    private static void registerComponent(Class<?> clazz) throws Exception {
         if (Services.getService(clazz) != null) {
             // Component is already registered
             return;
@@ -65,7 +65,7 @@ public class ComponentUtil {
         System.out.println("[DEBUG] Registered component: " + clazz.getName());
     }
 
-      private static Object[] resolveDependencies(Class<?>[] paramTypes) throws Exception {
+    private static Object[] resolveDependencies(Class<?>[] paramTypes) throws Exception {
         Object[] params = new Object[paramTypes.length];
         for (int i = 0; i < paramTypes.length; i++) {
             Class<?> paramType = paramTypes[i];
@@ -87,16 +87,12 @@ public class ComponentUtil {
         return params;
     }
 
-        private static boolean process(Class<?> clazz) {
+    private static boolean process(Class<?> clazz) {
         for (Class<? extends Annotation> processor : Services.getProcessable()) {
-            if (clazz.isAnnotationPresent(processor)){
+            if (clazz.isAnnotationPresent(processor)) {
                 return true;
             }
         }
         return false;
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> feature/loader

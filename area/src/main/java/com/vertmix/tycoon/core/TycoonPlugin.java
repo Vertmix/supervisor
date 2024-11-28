@@ -12,7 +12,7 @@ public class TycoonPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         Bukkit.getScheduler().runTaskLater(this, () -> {
-            SupervisorLoader.register(bukkit(this), new PaperCommandManager(this));
+            //SupervisorLoader.register(bukkit(this), new PaperCommandManager(this));
         }, 30L);
 
     }
