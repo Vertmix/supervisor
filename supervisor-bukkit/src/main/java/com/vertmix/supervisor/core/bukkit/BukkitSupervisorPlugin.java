@@ -10,6 +10,7 @@ public class BukkitSupervisorPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         SupervisorLoader.register(bukkit(this));
+
     }
 
     @Override

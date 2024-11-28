@@ -1,12 +1,12 @@
 package com.vertmix.supervisor.core.annotation;
 
-import com.vertmix.supervisor.core.module.Module;
-
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
 public @interface ModuleDependency {
-
-    Class<? extends Module> clazz();
+    String[] dependencies() default {};
 }

@@ -43,9 +43,9 @@ public class SimplePlayerMenu extends AbstractMenu<Player> implements PlayerMenu
 
     @Override
     public void open(Player player) {
-        if (this.inventory == null) {
-            this.inventory = Bukkit.createInventory(player, 9, Component.text((String) options.getOrDefault("title", "Menu")));
-        }
+        this.inventory = Bukkit.createInventory(player, 9, Component.text((String) options.getOrDefault("title", "Menu")));
+        render(player);
+
         player.openInventory(this.inventory);
     }
 

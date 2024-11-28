@@ -9,7 +9,6 @@ dependencies {
     implementation(project(":supervisor-repository"))
     implementation(project(":supervisor-repository-json"))
 
-    implementation("org.reflections:reflections:0.10.2")
     implementation("com.google.code.gson:gson:2.10.1")
 
 }

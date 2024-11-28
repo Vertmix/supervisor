@@ -1,6 +1,7 @@
 package com.vertmix.supervisor.core.service;
 
 import com.vertmix.supervisor.core.annotation.Component;
+import com.vertmix.supervisor.core.terminable.Terminal;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -120,5 +121,9 @@ public class Services {
 
     public static Set<Class<? extends Annotation>> getProcessable() {
         return processable;
+    }
+
+    public static void kill() {
+        services.values().stream().filter(o -> o instanceof Terminal).map(o -> (Terminal)o).forEach(Terminal::closeSilently);
     }
 }
