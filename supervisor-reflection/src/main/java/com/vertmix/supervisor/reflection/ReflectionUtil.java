@@ -8,6 +8,10 @@ import org.reflections.util.ConfigurationBuilder;
 
 import java.lang.reflect.Constructor;
 import java.util.Collection;
+<<<<<<< HEAD
+=======
+import java.util.Set;
+>>>>>>> feature/loader
 import java.util.stream.Collectors;
 
 public class ReflectionUtil {
@@ -47,4 +51,8 @@ public class ReflectionUtil {
         }).collect(Collectors.toSet());
 
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> feature/loader

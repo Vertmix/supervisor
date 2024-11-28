@@ -46,17 +46,10 @@ public interface Repository<T> {
     
     Collection<T> values();
 
-    void cache(Object key, T type);
 
     Collection<String> keys();
 
-    void invalidate(Object key);
-
-    void invalidateAll();
-
     void deleteAll();
-
-    void saveAll();
 
     Collection<T> findAll();
 }

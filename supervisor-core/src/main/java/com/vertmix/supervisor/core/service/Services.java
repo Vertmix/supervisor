@@ -126,4 +126,8 @@ public class Services {
     public static void kill() {
         services.values().stream().filter(o -> o instanceof Terminal).map(o -> (Terminal)o).forEach(Terminal::closeSilently);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> feature/loader

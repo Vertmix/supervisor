@@ -1,6 +1,6 @@
 package com.vertmix.supervisor.repository.json;
 
-import com.vertmix.supervisor.repository.Repository;
+import com.vertmix.supervisor.repository.RepositoryCache;
 
-public interface JsonRepository<T> extends Repository<T> {
+public interface JsonRepository<T> extends RepositoryCache<T> {
 }

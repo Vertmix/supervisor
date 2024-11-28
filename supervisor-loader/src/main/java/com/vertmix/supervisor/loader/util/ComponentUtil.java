@@ -95,4 +95,8 @@ public class ComponentUtil {
         }
         return false;
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> feature/loader

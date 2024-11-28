@@ -9,4 +9,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface ModuleDependency {
     String[] dependencies() default {};
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> feature/loader
