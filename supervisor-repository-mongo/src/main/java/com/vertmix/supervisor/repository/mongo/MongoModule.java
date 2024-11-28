@@ -4,6 +4,8 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.vertmix.supervisor.core.CoreProvider;
+import com.vertmix.supervisor.core.annotation.ModuleDependency;
+import com.vertmix.supervisor.core.annotation.ModuleInfo;
 import com.vertmix.supervisor.core.annotation.Navigation;
 import com.vertmix.supervisor.core.module.Module;
 import com.vertmix.supervisor.core.service.Services;
@@ -12,6 +14,8 @@ import com.vertmix.supervisor.reflection.AbstractProxyHandler;
 import java.io.File;
 import java.lang.reflect.Proxy;
 
+@ModuleInfo(name = "repository-mongo")
+@ModuleDependency(dependencies = { "adapter" })
 public class MongoModule implements Module<Object> {
 
     private MongoClient mongoClient;

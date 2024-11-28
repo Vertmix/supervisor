@@ -2,16 +2,12 @@ package com.vertmix.supervisor.adapter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
 import com.vertmix.supervisor.core.CoreProvider;
+import com.vertmix.supervisor.core.annotation.ModuleInfo;
 import com.vertmix.supervisor.core.module.Module;
-import com.vertmix.supervisor.core.service.Services;
-import org.bukkit.Bukkit;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 
+@ModuleInfo(name = "adapter" )
 public class AdapterModule implements Module<Object> {
 
     private final GsonBuilder gsonBuilder = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting();

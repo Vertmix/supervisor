@@ -3,6 +3,7 @@ package com.vertmix.supervisor.loader.util;
 import com.vertmix.supervisor.core.CoreProvider;
 import com.vertmix.supervisor.core.annotation.ModuleDependency;
 import com.vertmix.supervisor.core.annotation.ModuleInfo;
+import com.vertmix.supervisor.core.api.ClassProcessor;
 import com.vertmix.supervisor.core.module.Module;
 
 import java.util.*;
@@ -38,7 +39,7 @@ public class ModuleUtil {
             // Enable modules in dependency order
             Set<String> visited = new HashSet<>();
             for (String moduleName : modulesMap.keySet()) {
-                enableModuleWithDependencies(moduleName, modulesMap, moduleDependencies, enabledModules, visited, provider);
+                enableModuleWithDependencies(moduleName, modulesMap, moduleDependencies, enabledModules, visited, provider, classes);
             }
 
         } catch (Exception e) {
@@ -51,7 +52,7 @@ public class ModuleUtil {
 
     private static void enableModuleWithDependencies(String moduleName, Map<String, Module> modulesMap,
                                                      Map<String, List<String>> moduleDependencies, Set<Module> enabledModules,
-                                                     Set<String> visited, CoreProvider<?> provider) throws Exception {
+                                                     Set<String> visited, CoreProvider<?> provider, Collection<Class<?>> classes) throws Exception {
         if (visited.contains(moduleName)) {
             throw new IllegalStateException("Circular dependency detected involving module: " + moduleName);
         }
@@ -61,7 +62,7 @@ public class ModuleUtil {
             List<String> dependencies = moduleDependencies.get(moduleName);
             if (dependencies != null) {
                 for (String dependency : dependencies) {
-                    enableModuleWithDependencies(dependency, modulesMap, moduleDependencies, enabledModules, visited, provider);
+                    enableModuleWithDependencies(dependency, modulesMap, moduleDependencies, enabledModules, visited, provider, classes);
                 }
             }
             visited.remove(moduleName);
@@ -69,6 +70,9 @@ public class ModuleUtil {
             Module module = modulesMap.get(moduleName);
             if (module != null) {
                 module.onEnable(provider);
+                ClassProcessor processor = (ClassProcessor) module;
+                for (Class<?> clazz : classes)
+                    processor.process(clazz);
                 enabledModules.add(module);
                 System.out.println("Enabled module: " + moduleName);
             }

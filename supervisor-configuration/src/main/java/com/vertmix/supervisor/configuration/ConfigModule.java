@@ -1,6 +1,7 @@
 package com.vertmix.supervisor.configuration;
 
 import com.vertmix.supervisor.core.CoreProvider;
+import com.vertmix.supervisor.core.annotation.ModuleInfo;
 import com.vertmix.supervisor.core.module.Module;
 import com.vertmix.supervisor.core.service.Services;
 
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+@ModuleInfo(name = "configuration")
 public class ConfigModule implements Module<Object> {
 
     private static CoreProvider<Object> origin;

@@ -1,6 +1,5 @@
 package com.vertmix.supervisor.repository.redis.service;
 
-import com.vertmix.supervisor.repository.redis.DataProxyHandler;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPubSub;
@@ -9,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
-import static com.vertmix.supervisor.repository.redis.DataProxyHandler.GSON;
+import static com.vertmix.supervisor.adapter.AdapterModule.GSON;
 
 public class RedisService {
 

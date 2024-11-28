@@ -1,14 +1,17 @@
 package com.vertmix.supervisor.repository.json;
 
 import com.vertmix.supervisor.core.CoreProvider;
+import com.vertmix.supervisor.core.annotation.ModuleDependency;
+import com.vertmix.supervisor.core.annotation.ModuleInfo;
 import com.vertmix.supervisor.core.annotation.Navigation;
 import com.vertmix.supervisor.core.module.Module;
 import com.vertmix.supervisor.core.service.Services;
 
 import java.io.File;
 
+@ModuleInfo(name = "repository-json")
+@ModuleDependency(dependencies = { "adapter" })
 public class JsonRepositoryModule implements Module<Object> {
-
 
     private File pluginDataFolder = null;
 

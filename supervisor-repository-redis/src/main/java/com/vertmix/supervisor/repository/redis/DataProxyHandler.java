@@ -19,6 +19,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
+import static com.vertmix.supervisor.adapter.AdapterModule.GSON;
+
 /**
  * The {@code DataProxyHandler} class serves as an abstraction layer for repository interfaces
  * with support for multiple underlying storage implementations (e.g., MongoDB, SQL) and Redis caching.
@@ -27,8 +29,6 @@ import java.util.stream.Collectors;
  * @param <T> The type of entities managed by the repository.
  */
 public abstract class DataProxyHandler<T> extends AbstractProxyHandler<T>{
-
-    protected static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
     protected final JedisPool jedisPool;
     protected final Class<T> entityType;
 
