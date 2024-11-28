@@ -1,7 +1,7 @@
 package com.vertmix.supervisor.menu.service;
 
 import com.vertmix.supervisor.core.bukkit.item.Icon;
-import com.vertmix.supervisor.menu.menu.Menu;
+import com.vertmix.supervisor.menu.api.IMenu;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 
-public class SimpleMenu extends AbstractMenu<Object> implements Menu, InventoryHolder {
+public class SimpleMenu extends AbstractMenu<Object> implements InventoryHolder, IMenu<Object> {
 
     protected Inventory inventory;
 

@@ -1,4 +1,4 @@
-package com.vertmix.supervisor.menu.entity;
+package com.vertmix.supervisor.menu.api;
 
 import org.bukkit.event.Event;
 

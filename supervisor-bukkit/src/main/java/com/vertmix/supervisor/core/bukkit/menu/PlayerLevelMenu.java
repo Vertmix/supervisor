@@ -1,8 +1,9 @@
 package com.vertmix.supervisor.core.bukkit.menu;
 
 import com.vertmix.supervisor.core.bukkit.item.Icon;
+import com.vertmix.supervisor.menu.api.PlayerMenu;
 import com.vertmix.supervisor.menu.entity.InteractionModifier;
-import com.vertmix.supervisor.menu.menu.PlayerMenu;
+import org.bukkit.entity.Player;
 
 public interface PlayerLevelMenu extends PlayerMenu {
 
@@ -23,5 +24,8 @@ public interface PlayerLevelMenu extends PlayerMenu {
 
         disableAllInteractions();
         disableInteraction(InteractionModifier.PREVENT_ITEM_DROP);
+
+        replace("{player}", Player::getName);
+
     }
 }

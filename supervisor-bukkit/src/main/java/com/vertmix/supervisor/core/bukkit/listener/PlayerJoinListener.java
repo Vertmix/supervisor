@@ -2,7 +2,7 @@ package com.vertmix.supervisor.core.bukkit.listener;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import com.vertmix.supervisor.core.annotation.Component;
-import com.vertmix.supervisor.core.bukkit.menu.ServerSelectorIMenu;
+import com.vertmix.supervisor.core.bukkit.menu.ServerSelectorMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,9 +10,9 @@ import org.bukkit.event.Listener;
 @Component
 public class PlayerJoinListener implements Listener {
 
-    private final ServerSelectorIMenu serverSelectorMenu;
+    private final ServerSelectorMenu serverSelectorMenu;
 
-    public PlayerJoinListener(ServerSelectorIMenu serverSelectorMenu) {
+    public PlayerJoinListener(ServerSelectorMenu serverSelectorMenu) {
         this.serverSelectorMenu = serverSelectorMenu;
     }
 

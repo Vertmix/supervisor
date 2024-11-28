@@ -27,11 +27,10 @@ public class RegionAdapter extends TypeAdapter<CuboidRegion> {
             throw new IOException("Only CuboidRegion types are supported for serialization.");
         }
 
-        CuboidRegion cuboidRegion = (CuboidRegion) value;
+        CuboidRegion cuboidRegion = value;
 
         // Begin writing the region
         out.beginObject();
-        out.name("region").beginObject();
         out.name("worldName").value(cuboidRegion.getWorld().getName());
 
         // Write the minimum point
@@ -52,8 +51,8 @@ public class RegionAdapter extends TypeAdapter<CuboidRegion> {
 
         // End writing the region
         out.endObject();
-        out.endObject();
     }
+
 
     @Override
     public CuboidRegion read(JsonReader in) throws IOException {

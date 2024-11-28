@@ -1,13 +1,14 @@
 package com.vertmix.supervisor.menu;
 
 import com.vertmix.supervisor.core.CoreProvider;
+import com.vertmix.supervisor.core.annotation.ModuleInfo;
 import com.vertmix.supervisor.core.annotation.Navigation;
 import com.vertmix.supervisor.core.module.Module;
 import com.vertmix.supervisor.core.service.Services;
+import com.vertmix.supervisor.menu.api.Menu;
+import com.vertmix.supervisor.menu.api.PlayerMenu;
 import com.vertmix.supervisor.menu.listener.InteractionModifierListener;
 import com.vertmix.supervisor.menu.listener.MenuListener;
-import com.vertmix.supervisor.menu.menu.Menu;
-import com.vertmix.supervisor.menu.menu.PlayerMenu;
 import com.vertmix.supervisor.menu.service.PlayerMenuProxyHandler;
 import com.vertmix.supervisor.menu.service.StaticMenuProxyHandler;
 import org.bukkit.Bukkit;
@@ -16,6 +17,7 @@ import org.bukkit.plugin.Plugin;
 import java.io.File;
 import java.io.IOException;
 
+@ModuleInfo(name = "menu")
 public class MenuModule implements Module<Plugin> {
 
     private File folder = null;
@@ -55,7 +57,7 @@ public class MenuModule implements Module<Plugin> {
             return menu;
         });
 
-                Services.register(PlayerMenu.class, clazz -> {
+        Services.register(PlayerMenu.class, clazz -> {
             File file = folder;
             Navigation navigation = clazz.getAnnotation(Navigation.class);
             if (navigation != null) {

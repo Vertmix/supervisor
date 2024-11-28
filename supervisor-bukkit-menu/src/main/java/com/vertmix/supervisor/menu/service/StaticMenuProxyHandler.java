@@ -1,6 +1,6 @@
 package com.vertmix.supervisor.menu.service;
 
-import com.vertmix.supervisor.menu.menu.Menu;
+import com.vertmix.supervisor.menu.api.Menu;
 import com.vertmix.supervisor.reflection.AbstractProxyHandler;
 
 import java.io.File;

@@ -1,6 +1,6 @@
 package com.vertmix.supervisor.menu.listener;
 
-import com.vertmix.supervisor.menu.entity.GuiAction;
+import com.vertmix.supervisor.menu.api.GuiAction;
 import com.vertmix.supervisor.menu.service.SimpleMenu;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

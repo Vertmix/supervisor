@@ -1,9 +1,10 @@
-package com.vertmix.supervisor.menu.menu;
+package com.vertmix.supervisor.menu.api;
 
 import com.vertmix.supervisor.core.bukkit.item.Icon;
 import com.vertmix.supervisor.core.terminable.Terminal;
-import com.vertmix.supervisor.menu.entity.GuiAction;
 import com.vertmix.supervisor.menu.entity.InteractionModifier;
+import com.vertmix.supervisor.menu.menu.MenuModifier;
+import com.vertmix.supervisor.menu.menu.Schema;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 

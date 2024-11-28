@@ -1,7 +1,7 @@
 package com.vertmix.supervisor.menu.service;
 
 import com.vertmix.supervisor.core.bukkit.item.Icon;
-import com.vertmix.supervisor.menu.menu.PlayerMenu;
+import com.vertmix.supervisor.menu.api.IMenu;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.io.IOException;
 
-public class SimplePlayerMenu extends AbstractMenu<Player> implements PlayerMenu {
+public class SimplePlayerMenu extends AbstractMenu<Player> implements IMenu<Player> {
 
     private Inventory inventory;
 

@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.introspect.VisibilityChecker;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.vertmix.supervisor.core.bukkit.item.Icon;
-import com.vertmix.supervisor.menu.entity.GuiAction;
+import com.vertmix.supervisor.menu.api.GuiAction;
 import com.vertmix.supervisor.menu.menu.MenuModifier;
 import com.vertmix.supervisor.menu.menu.Schema;
 import lombok.Getter;
