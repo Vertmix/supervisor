@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.io.IOException;
 
-public class SimplePlayerMenu extends AbstractMenu<Player> implements IMenu<Player> {
+public class SimplePlayerMenu extends AbstractMenu implements IMenu {
 
     private Inventory inventory;
 
@@ -27,12 +27,12 @@ public class SimplePlayerMenu extends AbstractMenu<Player> implements IMenu<Play
     }
 
     @Override
-    public void render(Player player) {
-        if (this.inventory == null || player == null || !player.isOnline()) {
+    public void render() {
+        if (this.inventory == null) {
             return;
         }
 
-         schema.getCharacterMap().forEach((key, value) -> {
+        schema.getCharacterMap().forEach((key, value) -> {
             Icon icon = items.get(key);
 
             for (Integer slot : value) {
@@ -44,7 +44,7 @@ public class SimplePlayerMenu extends AbstractMenu<Player> implements IMenu<Play
     @Override
     public void open(Player player) {
         this.inventory = Bukkit.createInventory(player, 9, Component.text((String) options.getOrDefault("title", "Menu")));
-        render(player);
+        render();
 
         player.openInventory(this.inventory);
     }

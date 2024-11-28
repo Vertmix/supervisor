@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import java.util.function.Function;
 
-public interface PlayerMenu extends IMenu<Player> {
+public interface PlayerMenu extends IMenu {
 
     void replace(String key, Function<Player, String> function);
 }

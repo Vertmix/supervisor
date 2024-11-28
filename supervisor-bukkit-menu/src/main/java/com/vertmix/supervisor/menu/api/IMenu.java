@@ -5,15 +5,16 @@ import com.vertmix.supervisor.core.terminable.Terminal;
 import com.vertmix.supervisor.menu.entity.InteractionModifier;
 import com.vertmix.supervisor.menu.menu.MenuModifier;
 import com.vertmix.supervisor.menu.menu.Schema;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.Collection;
 import java.util.Map;
 
-public interface IMenu<T> extends Terminal {
+public interface IMenu extends Terminal {
 
-    void render(T object);
+    void render();
 
     void set(char c, Icon icon);
 

@@ -25,9 +25,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public abstract class AbstractMenu<T> {
+public abstract class AbstractMenu {
 
-       private static final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory()
+    private static final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory()
             .enable(YAMLGenerator.Feature.INDENT_ARRAYS_WITH_INDICATOR)
             .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES)
             .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER))
@@ -36,19 +36,13 @@ public abstract class AbstractMenu<T> {
             .configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true)
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY));
-
-    private final File file;
-
     protected final @Getter Map<Character, Icon> items = new HashMap<>();
-
     protected final @Getter Map<Integer, GuiAction<InventoryClickEvent>> actions = new HashMap<>();
     protected final @Getter Map<Character, GuiAction<InventoryClickEvent>> charActions = new HashMap<>();
-
     protected final Schema schema = new Schema();
     protected final MenuModifier menuModifier = new MenuModifier();
-
     protected final @Getter Map<String, Object> options = new HashMap<>();
-
+    private final File file;
     protected @Setter
     @Getter GuiAction<InventoryClickEvent> defaultClickAction;
     protected @Setter @Getter GuiAction<InventoryClickEvent> defaultTopClickAction;
@@ -109,8 +103,7 @@ public abstract class AbstractMenu<T> {
     }
 
 
-
-    public abstract void render(T o);
+    public abstract void render();
 
     public void set(char c, Icon icon) {
         set(c, icon, null);
