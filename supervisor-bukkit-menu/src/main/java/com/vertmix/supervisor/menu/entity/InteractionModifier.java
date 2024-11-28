@@ -1,4 +1,4 @@
-package com.vertmix.supervisor.menu;
+package com.vertmix.supervisor.menu.entity;
 
 import java.util.Collections;
 import java.util.EnumSet;

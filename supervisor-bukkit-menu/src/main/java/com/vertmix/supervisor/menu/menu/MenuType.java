@@ -1,9 +1,9 @@
-package com.vertmix.supervisor.menu;
+package com.vertmix.supervisor.menu.menu;
 
 import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
 
-public enum GuiType {
+public enum MenuType {
 
     CHEST(InventoryType.CHEST, 9),
     WORKBENCH(InventoryType.WORKBENCH, 9),
@@ -15,7 +15,7 @@ public enum GuiType {
     private final InventoryType inventoryType;
     private final int limit;
 
-    GuiType(@NotNull final InventoryType inventoryType, final int limit) {
+    MenuType(@NotNull final InventoryType inventoryType, final int limit) {
         this.inventoryType = inventoryType;
         this.limit = limit;
     }

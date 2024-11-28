@@ -25,4 +25,8 @@ public class SupervisorLoader {
         Services.kill();
     }
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> feature/loader

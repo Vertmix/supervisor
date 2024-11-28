@@ -13,9 +13,12 @@
             <option value="$PROJECT_DIR$/supervisor-adapter" />
             <option value="$PROJECT_DIR$/supervisor-adapter-bukkit" />
             <option value="$PROJECT_DIR$/supervisor-bukkit" />
+            <option value="$PROJECT_DIR$/supervisor-bukkit-instance" />
             <option value="$PROJECT_DIR$/supervisor-bukkit-item" />
             <option value="$PROJECT_DIR$/supervisor-bukkit-menu" />
+            <option value="$PROJECT_DIR$/supervisor-bukkit-module-demo" />
             <option value="$PROJECT_DIR$/supervisor-bukkit-util" />
+            <option value="$PROJECT_DIR$/supervisor-bukkit-util-schedule" />
             <option value="$PROJECT_DIR$/supervisor-bungee" />
             <option value="$PROJECT_DIR$/supervisor-bungee-util" />
             <option value="$PROJECT_DIR$/supervisor-configuration" />
@@ -23,7 +26,11 @@
             <option value="$PROJECT_DIR$/supervisor-configuration-toml" />
             <option value="$PROJECT_DIR$/supervisor-configuration-yml" />
             <option value="$PROJECT_DIR$/supervisor-core" />
+            <option value="$PROJECT_DIR$/supervisor-economy" />
+            <option value="$PROJECT_DIR$/supervisor-instance" />
+            <option value="$PROJECT_DIR$/supervisor-instance-standalone" />
             <option value="$PROJECT_DIR$/supervisor-loader" />
+            <option value="$PROJECT_DIR$/supervisor-module-loader" />
             <option value="$PROJECT_DIR$/supervisor-reflection" />
             <option value="$PROJECT_DIR$/supervisor-repository" />
             <option value="$PROJECT_DIR$/supervisor-repository-bukkit" />
@@ -36,6 +43,8 @@
             <option value="$PROJECT_DIR$/supervisor-repository-json" />
             <option value="$PROJECT_DIR$/supervisor-repository-migrator" />
             <option value="$PROJECT_DIR$/supervisor-repository-mongo" />
+            <option value="$PROJECT_DIR$/supervisor-repository-mongo-rediscache" />
+            <option value="$PROJECT_DIR$/supervisor-repository-redis" />
             <option value="$PROJECT_DIR$/supervisor-repository-sql" />
             <option value="$PROJECT_DIR$/supervisor-repository-velocity-json" />
             <option value="$PROJECT_DIR$/supervisor-repository-velocity-mongo" />

@@ -10,4 +10,8 @@ import java.lang.annotation.Target;
 public @interface ModuleInfo {
     String name();
     String version() default "0.0.1";
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> feature/loader
