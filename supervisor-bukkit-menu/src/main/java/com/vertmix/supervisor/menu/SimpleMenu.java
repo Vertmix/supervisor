@@ -65,9 +65,6 @@ public class SimpleMenu implements Menu, InventoryHolder {
     public SimpleMenu(File file, Class<Menu> clazz) {
         this.file = file;
         this.clazz = clazz;
-        // populate params
-        // populate actions
-        //
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.vertmix.supervisor.repository.json;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.vertmix.supervisor.reflection.AbstractProxyHandler;
 
@@ -11,12 +10,13 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static com.vertmix.supervisor.adapter.AdapterModule.GSON;
 
 /**
  * The {@code JsonProxyHandler} class serves as both a proxy handler for repository interfaces
@@ -31,8 +31,6 @@ public class JsonProxyHandler<T> extends AbstractProxyHandler<T> {
     private final Class<?> entityType;
     private Map<String, T> cache = new HashMap<>();
 
-    private static final Gson GSON = new Gson();
-
     /**
      * Constructs a new {@code JsonProxyHandler} instance for the specified service interface and JSON file.
      *
@@ -46,27 +44,13 @@ public class JsonProxyHandler<T> extends AbstractProxyHandler<T> {
         if (!serviceInterface.isInterface()) {
             throw new IllegalArgumentException("The service interface must be an interface.");
         }
-
-        // Ensure the interface is parameterized correctly
-        Type genericInterface = serviceInterface.getGenericInterfaces()[0];
-        if (genericInterface instanceof ParameterizedType parameterizedType) {
-            Type typeArgument = parameterizedType.getActualTypeArguments()[0];
-
-            // Check if the type argument is a concrete class
-            if (typeArgument instanceof Class<?> clazz) {
-                this.entityType = (Class<T>) clazz;
-            } else if (typeArgument instanceof TypeVariable<?>) {
-                throw new IllegalArgumentException("The generic type parameter must not be a type variable. Ensure a concrete class is specified.");
-            } else {
-                throw new IllegalArgumentException("Unsupported type argument: " + typeArgument.getClass().getName());
-            }
-        } else {
-            throw new IllegalArgumentException("The service interface must specify generic type arguments.");
-        }
+        ParameterizedType parameterizedType = (ParameterizedType) serviceInterface.getGenericInterfaces()[0];
+        this.entityType = (Class<T>) parameterizedType.getActualTypeArguments()[0];
 
         this.file = file;
         this.cache = loadFromFile();
     }
+
 
     /**
      * Handles method invocations on the proxy instance by routing them to the appropriate JSON-backed operations.

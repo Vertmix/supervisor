@@ -19,4 +19,8 @@ public interface Menu extends Terminal {
     void open(Player player);
 
     void init();
+    default void addSchema(String... objects) {
+        for (String o : objects)
+            schema().add(o);
+    }
 }

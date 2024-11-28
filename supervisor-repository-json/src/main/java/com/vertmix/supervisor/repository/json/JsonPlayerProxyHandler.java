@@ -20,6 +20,9 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.vertmix.supervisor.adapter.AdapterModule.GSON;
+
+
 /**
  * The {@code JsonPlayerProxyHandler} class extends the {@code AbstractProxyHandler} to provide a JSON-based
  * storage mechanism for player data with in-memory caching and reflective method handling.
@@ -31,7 +34,6 @@ public class JsonPlayerProxyHandler<T> extends AbstractProxyHandler<T>  {
     private final File directory;
     private final Class<T> entityType;
     private final Map<String, T> cache = new ConcurrentHashMap<>();
-    private static final Gson GSON = new Gson();
 
     /**
      * Constructs a {@code JsonPlayerProxyHandler} for managing player-specific JSON data.

@@ -16,6 +16,7 @@ repositories {
 
 subprojects {
     apply(plugin = "java")
+    apply(plugin = "maven-publish")
 
     repositories {
         mavenCentral()
@@ -26,6 +27,31 @@ subprojects {
     dependencies {
         testImplementation(platform("org.junit:junit-bom:5.9.1"))
         testImplementation("org.junit.jupiter:junit-jupiter")
+    }
+
+    publishing {
+        publications {
+            create<MavenPublication>("mavenJava") {
+                // Use either shadowJar or jar for the artifact, depending on your project's requirements
+                val shadowJarTask = tasks.findByName("shadowJar") as? com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+                if (shadowJarTask != null) {
+                    artifact(shadowJarTask.archiveFile.get().asFile) {
+                        classifier = null
+                    }
+                } else {
+                    from(components["java"])
+                }
+
+                // Set the groupId, version, and artifactId dynamically
+                groupId = project.group.toString()
+                // Use the project directory's name for the artifactId
+                artifactId = project.name
+                version = project.version.toString()
+
+                // Optional: Print out the artifact details for confirmation
+                println("Configuring publication for ${project.name} with artifactId ${project.name}")
+            }
+        }
     }
 
     tasks.withType<JavaCompile> {

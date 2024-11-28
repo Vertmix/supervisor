@@ -14,6 +14,10 @@ public abstract class CoreProvider<T> {
         this.source = source;
     }
 
+    public Class<?> getClazz() {
+        return this.source.getClass();
+    }
+
     public Path getPath() {
         return path;
     }

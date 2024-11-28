@@ -2,20 +2,19 @@ package com.vertmix.supervisor.loader;
 
 import com.vertmix.supervisor.core.CoreProvider;
 import com.vertmix.supervisor.core.annotation.Component;
+import com.vertmix.supervisor.core.annotation.ModulePriority;
 import com.vertmix.supervisor.core.annotation.Navigation;
 import com.vertmix.supervisor.core.module.Module;
 import com.vertmix.supervisor.core.service.Services;
 import com.vertmix.supervisor.core.terminable.Terminal;
-import com.vertmix.supervisor.repository.json.JsonProxyHandler;
-import com.vertmix.supervisor.repository.json.JsonRepository;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
-import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,44 +23,48 @@ import static com.vertmix.supervisor.reflection.ReflectionUtil.getComponentConst
 
 public class SupervisorLoader {
 
-
-    public static void register(CoreProvider<?> provider) {
+    public static void register(CoreProvider<?> provider, Object... objects) {
         try {
-            String packageName = provider.getClass().getPackage().getName();
-            ClassLoader classLoader = provider.getClass().getClassLoader();
+            ClassLoader classLoader = provider.getClazz().getClassLoader();
+//            System.out.println("PACKAGE NAME : " + packageName);
 
+            // Configure Reflections
             Reflections reflections = new Reflections(new ConfigurationBuilder()
-                    .setUrls(ClasspathHelper.forPackage(packageName, classLoader))
+                    .setUrls(ClasspathHelper.forPackage(provider.getClazz().getPackageName(), classLoader))
                     .setScanners(new SubTypesScanner(false)));
 
             // Collect all classes in the package
-            final Set<Class<?>> classes = reflections.getAll(new SubTypesScanner(false)).stream().filter(x -> x.startsWith(packageName)).map(x -> {
-                try {
-                    return Class.forName(x);
-                } catch (ClassNotFoundException e) {
-                    System.out.println("Could not find class " + x);
-                    return null;
-                }
-            }).collect(Collectors.toSet());
+            Set<Class<?>> classes = reflections.getSubTypesOf(Object.class).stream()
+                    .filter(clazz -> clazz.getName().startsWith(provider.getClazz().getPackageName()))
+                    .collect(Collectors.toSet());
 
+            Services.clazzes.addAll(classes);
+
+            // Process Modules
             Set<Module> modules = new HashSet<>();
             for (Class<?> clazz : classes) {
-                System.out.println(clazz.getSimpleName());
-                if (clazz.isInterface()) continue;
-                if (clazz.getInterfaces().length == 0) continue;
-                if (clazz.getInterfaces()[0] == Module.class) {
+                if (Module.class.isAssignableFrom(clazz) && !clazz.isInterface()) {
                     Module module = (Module) clazz.getDeclaredConstructor().newInstance();
-                    module.onEnable(provider);
+                    System.out.println("[INFO] Found module: " + clazz.getSimpleName());
                     modules.add(module);
                 }
             }
 
-            // First pass: register all components
+            modules.stream().sorted(Comparator.comparingInt(m -> {
+                return m.getClass().getAnnotation(ModulePriority.class) == null ? 1 : m.getClass().getAnnotation(ModulePriority.class).priority().getPriority();
+            })).forEach(m -> m.onEnable(provider));
+
+            for (Object o : objects) {
+                Services.register(o.getClass(), o);
+            }
+
+            // Register all components
             Set<Class<?>> componentClasses = new HashSet<>();
             for (Class<?> clazz : classes) {
-                if (process(clazz))
+                Services.runClazzConsumer(clazz);
+                if (process(clazz)) {
                     componentClasses.add(clazz);
-
+                }
             }
 
             for (Class<?> componentClass : componentClasses) {
@@ -79,7 +82,10 @@ public class SupervisorLoader {
     }
 
     public static void disable() {
-        Services.getServices().values().stream().filter(o -> o instanceof Terminal).map(o -> (Terminal)o).forEach(Terminal::closeSilently);
+        Services.getServices().values().stream()
+                .filter(o -> o instanceof Terminal)
+                .map(o -> (Terminal) o)
+                .forEach(Terminal::closeSilently);
     }
 
     private static void registerComponent(Class<?> clazz) throws Exception {
@@ -88,9 +94,17 @@ public class SupervisorLoader {
             return;
         }
 
+        System.out.println("SEARCHING....");
+        Services.getServices().forEach(((aClass, o) -> System.out.println("regist" + aClass.getSimpleName())));
+
         if (clazz.isInterface()) {
+            System.out.println(clazz.getSimpleName());
+            System.out.println(clazz.getInterfaces()[0]);
             // Handle interface by using factory from Services
-            if (Services.getFactories().containsKey(clazz.getInterfaces()[0])) {
+            if (Services.getFactories().containsKey(clazz)) {
+                System.out.println("CONTAINS");
+                Services.register(clazz, Services.create(clazz));
+            } else if (Services.getFactories().containsKey(clazz.getInterfaces()[0])) {
                 Services.register(clazz, Services.create(clazz));
             } else {
                 System.err.println("[WARNING] No factory found for interface: " + clazz.getName());
@@ -109,10 +123,9 @@ public class SupervisorLoader {
 
         // Create and register the component
         Object componentInstance = constructor.newInstance(params);
-        // Preform mutations
         Services.runConsumer(componentInstance);
-        // Register
         Services.register(clazz, componentInstance);
+        System.out.println("EXAMPLE RUNNING? " + clazz.getSimpleName());
         System.out.println("[DEBUG] Registered component: " + clazz.getName());
     }
 
@@ -121,13 +134,10 @@ public class SupervisorLoader {
         for (int i = 0; i < paramTypes.length; i++) {
             Class<?> paramType = paramTypes[i];
             Object serviceInstance = Services.getService(paramType);
-            System.out.println(paramType.getSimpleName());
-            System.out.println(process(paramType));
 
             if (serviceInstance != null) {
                 params[i] = serviceInstance;
             } else if (process(paramType)) {
-                System.out.println("can process");
                 // Register dependency if not already registered
                 registerComponent(paramType);
                 params[i] = Services.getService(paramType);
@@ -140,7 +150,7 @@ public class SupervisorLoader {
 
     private static boolean process(Class<?> clazz) {
         for (Class<? extends Annotation> processor : Services.getProcessable()) {
-            if (clazz.isAnnotationPresent(processor)){
+            if (clazz.isAnnotationPresent(processor)) {
                 return true;
             }
         }

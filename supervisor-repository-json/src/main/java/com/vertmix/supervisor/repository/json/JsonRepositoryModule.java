@@ -1,6 +1,7 @@
 package com.vertmix.supervisor.repository.json;
 
 import com.vertmix.supervisor.core.CoreProvider;
+import com.vertmix.supervisor.core.annotation.ModulePriority;
 import com.vertmix.supervisor.core.annotation.Navigation;
 import com.vertmix.supervisor.core.module.Module;
 import com.vertmix.supervisor.core.service.Services;
@@ -8,6 +9,7 @@ import com.vertmix.supervisor.core.service.Services;
 import java.io.File;
 
 public class JsonRepositoryModule implements Module<Object> {
+
 
     private File pluginDataFolder = null;
 
@@ -17,6 +19,8 @@ public class JsonRepositoryModule implements Module<Object> {
         pluginDataFolder = provider.getPath().toFile();
         ensureFolderExists(pluginDataFolder);
 
+
+        System.out.println("Registering JSON Repository");
         Services.register(JsonRepository.class, clazz -> {
             // Determine the subfolder name
             String subfolderName = clazz.getSimpleName();

@@ -9,6 +9,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/area" />
+            <option value="$PROJECT_DIR$/supervisor-adapter" />
+            <option value="$PROJECT_DIR$/supervisor-adapter-bukkit" />
             <option value="$PROJECT_DIR$/supervisor-bukkit" />
             <option value="$PROJECT_DIR$/supervisor-bukkit-item" />
             <option value="$PROJECT_DIR$/supervisor-bukkit-menu" />
