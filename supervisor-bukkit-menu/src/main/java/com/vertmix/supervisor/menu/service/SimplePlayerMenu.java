@@ -1,18 +1,16 @@
 package com.vertmix.supervisor.menu.service;
 
 import com.vertmix.supervisor.core.bukkit.item.Icon;
-import com.vertmix.supervisor.menu.menu.PlayerMenu;
-import net.kyori.adventure.text.Component;
+import com.vertmix.supervisor.core.bukkit.item.Text;
+import com.vertmix.supervisor.menu.api.IMenu;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
 
-public class SimplePlayerMenu extends AbstractMenu<Player> implements PlayerMenu {
+public class SimplePlayerMenu extends AbstractMenu implements IMenu {
 
     private Inventory inventory;
 
@@ -22,33 +20,41 @@ public class SimplePlayerMenu extends AbstractMenu<Player> implements PlayerMenu
 
     @Override
     public void init() {
+        System.out.println("before Schema: " + schema.size());
+
         loadFile();
         schema().build();
+
+        System.out.println("after Schema: " + schema.size());
+
+        this.inventory = Bukkit.createInventory(null, Math.max(1, schema.size()) * 9, Text.translate(options.getOrDefault("title", "Menu").toString()));
     }
 
     @Override
-    public void render(Player player) {
-        if (this.inventory == null || player == null || !player.isOnline()) {
+    public void render() {
+        if (this.inventory == null) {
+            System.out.println("null inventory");
             return;
         }
 
-         schema.getCharacterMap().forEach((key, value) -> {
+        System.out.println("rendering inventory");
+
+        schema.getCharacterMap().forEach((key, value) -> {
             Icon icon = items.get(key);
 
+            System.out.println(key + " " + icon.material);
+
             for (Integer slot : value) {
-                inventory.setItem(slot, new ItemStack(Material.GOLD_BLOCK, 1));
+                inventory.setItem(slot, icon.getItemstack());
             }
         });
     }
 
     @Override
     public void open(Player player) {
-        if (this.inventory == null) {
-            this.inventory = Bukkit.createInventory(player, 9, Component.text((String) options.getOrDefault("title", "Menu")));
-        }
-        player.openInventory(this.inventory);
+        render();
+        player.openInventory(inventory);
     }
-
 
     @Override
     public void close() throws IOException {

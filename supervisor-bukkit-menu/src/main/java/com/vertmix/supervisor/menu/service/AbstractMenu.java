@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.introspect.VisibilityChecker;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.vertmix.supervisor.core.bukkit.item.Icon;
-import com.vertmix.supervisor.menu.entity.GuiAction;
+import com.vertmix.supervisor.menu.api.GuiAction;
 import com.vertmix.supervisor.menu.menu.MenuModifier;
 import com.vertmix.supervisor.menu.menu.Schema;
 import lombok.Getter;
@@ -20,14 +20,15 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.inventory.Inventory;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public abstract class AbstractMenu<T> {
+public abstract class AbstractMenu {
 
-       private static final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory()
+    private static final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory()
             .enable(YAMLGenerator.Feature.INDENT_ARRAYS_WITH_INDICATOR)
             .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES)
             .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER))
@@ -35,28 +36,36 @@ public abstract class AbstractMenu<T> {
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true)
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-            .setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY));
+            .configure(MapperFeature.PROPAGATE_TRANSIENT_MARKER, true)
+            .setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.PUBLIC_ONLY));
 
-    private final File file;
-
+    // Items
     protected final @Getter Map<Character, Icon> items = new HashMap<>();
+    protected final List<Icon> icons = new ArrayList<>();
 
+    // Actions
     protected final @Getter Map<Integer, GuiAction<InventoryClickEvent>> actions = new HashMap<>();
     protected final @Getter Map<Character, GuiAction<InventoryClickEvent>> charActions = new HashMap<>();
 
+    // Menu configurations
     protected final Schema schema = new Schema();
     protected final MenuModifier menuModifier = new MenuModifier();
-
     protected final @Getter Map<String, Object> options = new HashMap<>();
 
-    protected @Setter
-    @Getter GuiAction<InventoryClickEvent> defaultClickAction;
+    // File location
+    private final File file;
+
+    // Inventory
+    protected @Getter Inventory inventory;
+
+    // Actions
+    protected @Setter @Getter GuiAction<InventoryClickEvent> defaultClickAction;
     protected @Setter @Getter GuiAction<InventoryClickEvent> defaultTopClickAction;
     protected @Setter @Getter GuiAction<InventoryClickEvent> playerInventoryAction;
     protected @Setter @Getter GuiAction<InventoryDragEvent> dragAction;
     protected @Setter @Getter GuiAction<InventoryCloseEvent> closeGuiAction;
     protected @Setter @Getter GuiAction<InventoryOpenEvent> openGuiAction;
-    private @Setter @Getter GuiAction<InventoryClickEvent> outsideClickAction;
+    protected @Setter @Getter GuiAction<InventoryClickEvent> outsideClickAction;
 
 
     public AbstractMenu(File file) {
@@ -109,8 +118,7 @@ public abstract class AbstractMenu<T> {
     }
 
 
-
-    public abstract void render(T o);
+    public abstract void render();
 
     public void set(char c, Icon icon) {
         set(c, icon, null);
@@ -124,10 +132,13 @@ public abstract class AbstractMenu<T> {
     }
 
     public void setSlotAction(char c, GuiAction<InventoryClickEvent> action) {
-        for (Integer i : Optional.ofNullable(schema.getCharacterMap().get(c)).orElse(new HashSet<>())) {
+        for (Integer i : Optional.ofNullable(schema.getCharacterMap().get(c)).orElse(List.of())) {
             actions.put(i, action);
         }
+    }
 
+    public void addAll(Collection<Icon> collection) {
+        this.icons.addAll(collection);
     }
 
     public void setSlotAction(int slot, GuiAction<InventoryClickEvent> action) {
@@ -147,7 +158,6 @@ public abstract class AbstractMenu<T> {
     }
 
     public abstract void open(Player player);
-
 
     public GuiAction<InventoryClickEvent> getSlotAction(int slot) {
         return actions.get(slot);

@@ -6,7 +6,7 @@ import com.vertmix.supervisor.core.bukkit.item.Icon;
 import com.vertmix.supervisor.menu.menu.IMenu;
 import org.bukkit.Sound;
 
-@Component
+//@Component
 @Navigation(path = "/menus/server-selector.yml")
 public interface ServerSelectorIMenu extends IMenu {
 

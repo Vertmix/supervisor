@@ -1,18 +1,19 @@
-package com.vertmix.supervisor.menu.menu;
+package com.vertmix.supervisor.menu.api;
 
 import com.vertmix.supervisor.core.bukkit.item.Icon;
 import com.vertmix.supervisor.core.terminable.Terminal;
-import com.vertmix.supervisor.menu.entity.GuiAction;
 import com.vertmix.supervisor.menu.entity.InteractionModifier;
+import com.vertmix.supervisor.menu.menu.MenuModifier;
+import com.vertmix.supervisor.menu.menu.Schema;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.Collection;
 import java.util.Map;
 
-public interface IMenu<T> extends Terminal {
+public interface IMenu extends Terminal {
 
-    void render(T object);
+    void render();
 
     void set(char c, Icon icon);
 
@@ -33,9 +34,12 @@ public interface IMenu<T> extends Terminal {
     void init();
 
     default void setup() {
+
     }
 
-    default void callback() {
+
+    default void fallback(Player player) {
+
     }
 
     default void disableAllInteractions() {
@@ -57,5 +61,7 @@ public interface IMenu<T> extends Terminal {
     default void schema(String... objects) {
         schema().add(objects);
     }
+
+    void addAll(Collection<Icon> collection);
 
 }
