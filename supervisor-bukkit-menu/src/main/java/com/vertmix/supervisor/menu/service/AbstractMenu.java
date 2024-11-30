@@ -44,17 +44,22 @@ public abstract class AbstractMenu {
     // Items
     protected final @Getter Map<Character, Icon> items = new HashMap<>();
     protected final List<Icon> icons = new ArrayList<>();
+
     // Actions
     protected final @Getter Map<Integer, GuiAction<InventoryClickEvent>> actions = new HashMap<>();
     protected final @Getter Map<Character, GuiAction<InventoryClickEvent>> charActions = new HashMap<>();
+
     // Menu configurations
     protected final Schema schema = new Schema();
     protected final MenuModifier menuModifier = new MenuModifier();
     protected final @Getter Map<String, Object> options = new HashMap<>();
+
     // File location
     private final File file;
+
     // Inventory
     protected @Getter Inventory inventory;
+
     // Actions
     protected @Setter @Getter GuiAction<InventoryClickEvent> defaultClickAction;
     protected @Setter @Getter GuiAction<InventoryClickEvent> defaultTopClickAction;
@@ -137,7 +142,6 @@ public abstract class AbstractMenu {
     public void addAll(Collection<Icon> collection) {
         this.icons.addAll(collection);
     }
-
 
     public void setSlotAction(int slot, GuiAction<InventoryClickEvent> action) {
         actions.put(slot, action);

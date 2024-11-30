@@ -31,7 +31,6 @@ public class SimplePagedMenu extends AbstractMenu implements InventoryHolder, IM
         loadFile();
         schema().build();
 
-
         set('>', new Icon(Material.ARROW, 1), event -> {
             page++;
             render();
@@ -42,7 +41,7 @@ public class SimplePagedMenu extends AbstractMenu implements InventoryHolder, IM
             render();
         });
 
-        inventory = Bukkit.createInventory(this,  schema.size() * 9, "Example");
+        inventory = Bukkit.createInventory(this, schema.size() * 9, "Example");
         render();
     }
 
@@ -51,11 +50,11 @@ public class SimplePagedMenu extends AbstractMenu implements InventoryHolder, IM
         List<Integer> indexes = schema.getCharacterMap().get('@');
         this.pager = new Pager(icons, indexes.size());
         List<Icon> icons = pager.getPage(page);
-        // icons.get(x)
+
         int i = 0;
         for (int x : indexes) {
-           inventory.setItem(x, icons.get(i).getItemstack());
-           i++;
+            inventory.setItem(x, icons.get(i).getItemstack());
+            i++;
         }
 
 

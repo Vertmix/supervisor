@@ -35,6 +35,7 @@ public interface IMenu extends Terminal {
     void init();
 
     default void setup() {
+
     }
 
     default void fallback(Player player) {

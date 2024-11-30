@@ -20,8 +20,6 @@ public interface PagesMenu extends PagedMenu {
 
         set('#', new Icon(Material.LIGHT_GRAY_STAINED_GLASS_PANE));
 
-
-
         disableAllInteractions();
         disableInteraction(InteractionModifier.PREVENT_ITEM_DROP);
 

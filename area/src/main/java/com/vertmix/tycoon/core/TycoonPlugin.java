@@ -16,7 +16,7 @@ public class TycoonPlugin extends JavaPlugin {
         Bukkit.getScheduler().runTaskLater(this, () -> {
             SupervisorLoader.register(bukkit(this), new PaperCommandManager(this));
             ModuleLoader.register(new BukkitModuleProvider(getDataFolder().toPath(), this));
-        }, 30L);
+        }, 1L);
 
     }
 

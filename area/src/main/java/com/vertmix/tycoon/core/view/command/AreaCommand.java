@@ -16,6 +16,7 @@ import com.vertmix.tycoon.core.controller.AreaController;
 import com.vertmix.tycoon.core.model.Area;
 import com.vertmix.tycoon.core.view.menu.ExampleMenu;
 import com.vertmix.tycoon.core.view.menu.ExamplePagerMenu;
+import com.vertmix.tycoon.core.view.menu.PlayerLevelMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -28,13 +29,18 @@ public class AreaCommand extends BaseCommand {
     private final WorldEditPlugin worldEditPlugin;
 
     private final ExampleMenu exampleMenu;
+    private final PlayerLevelMenu playerLevelMenu;
     private final ExamplePagerMenu examplePagerMenu;
 
-    public AreaCommand(AreaController areaController, PaperCommandManager commandManager, ExampleMenu exampleMenu, ExamplePagerMenu examplePagerMenu) {
+    public AreaCommand(AreaController areaController, PaperCommandManager commandManager, ExampleMenu exampleMenu, PlayerLevelMenu playerLevelMenu, ExamplePagerMenu examplePagerMenu) {
         this.areaController = areaController;
         this.exampleMenu = exampleMenu;
+        this.playerLevelMenu = playerLevelMenu;
         this.examplePagerMenu = examplePagerMenu;
         this.worldEditPlugin = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
+
+        System.out.println("trigger");
+
         commandManager.registerCommand(this);
     }
 
@@ -80,7 +86,7 @@ public class AreaCommand extends BaseCommand {
 
     @Subcommand("player")
     public void onPlayer(Player player) {
-
+        playerLevelMenu.open(player);
     }
 
     @Subcommand("paging")

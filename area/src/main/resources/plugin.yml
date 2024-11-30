@@ -1,7 +1,7 @@
 main: com.vertmix.tycoon.core.TycoonPlugin
 version: 1.0
 name: TycoonCore
-api-version: 1.21
+api-version: 1.20
 depend: [WorldEdit]
 author: Vertmix
 website: https://vertmix.com

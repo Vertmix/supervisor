@@ -1,4 +1,4 @@
-package com.vertmix.supervisor.core.bukkit.menu;
+package com.vertmix.tycoon.core.view.menu;
 
 import com.vertmix.supervisor.core.annotation.Component;
 import com.vertmix.supervisor.core.annotation.Navigation;
@@ -15,11 +15,12 @@ public interface PlayerLevelMenu extends PlayerMenu {
     @Override
     default void setup() {
 
-        schema(
-                "#########",
+        schema("#########",
                 "#########",
                 "#########"
         );
+
+        System.out.println("Triggering setup process");
 
         addOption("title", "example");
 

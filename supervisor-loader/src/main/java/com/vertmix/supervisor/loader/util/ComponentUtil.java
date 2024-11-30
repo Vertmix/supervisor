@@ -70,8 +70,8 @@ public class ComponentUtil {
         for (int i = 0; i < paramTypes.length; i++) {
             Class<?> paramType = paramTypes[i];
             Object serviceInstance = Services.getService(paramType);
-            System.out.println(paramType.getSimpleName());
-            System.out.println(process(paramType));
+//            System.out.println(paramType.getSimpleName());
+//            System.out.println(process(paramType));
 
             if (serviceInstance != null) {
                 params[i] = serviceInstance;

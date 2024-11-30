@@ -53,10 +53,10 @@ public class AdapterModule implements Module<Object>, ClassProcessor {
                     System.out.println("Is adapter class: " + clazz.getSimpleName());
                     Constructor<?> constructor = clazz.getConstructor(); // Correct usage
                     TypeAdapter<?> adapterInstance = (TypeAdapter<?>) constructor.newInstance();
-                    System.out.println("???");
-                    System.out.println(clazz.getSimpleName());
-                    System.out.println(getGenericType(clazz).getSimpleName());
-                    System.out.println(adapterInstance.getClass().getSimpleName());
+//                    System.out.println("???");
+//                    System.out.println(clazz.getSimpleName());
+//                    System.out.println(getGenericType(clazz).getSimpleName());
+//                    System.out.println(adapterInstance.getClass().getSimpleName());
                     gsonBuilder.registerTypeAdapter(getGenericType(clazz), adapterInstance);
 
                     Bukkit.getLogger().info("Registered adapter " + clazz.getSimpleName().replaceAll("Class", ""));

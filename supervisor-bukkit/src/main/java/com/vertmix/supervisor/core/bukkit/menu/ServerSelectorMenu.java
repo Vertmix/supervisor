@@ -7,7 +7,7 @@ import com.vertmix.supervisor.menu.api.Menu;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 
-@Component
+//@Component
 @Navigation(path = "/menus/server-selector.yml")
 public interface ServerSelectorMenu extends Menu {
 

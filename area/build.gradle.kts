@@ -44,7 +44,4 @@ dependencies {
     compileOnly("com.ticxo.modelengine:ModelEngine:R4.0.4")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
 
-
-
-
 }
