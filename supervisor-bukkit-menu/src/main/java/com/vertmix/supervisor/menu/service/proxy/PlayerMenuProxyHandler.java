@@ -33,6 +33,8 @@ public class PlayerMenuProxyHandler extends AbstractProxyHandler<PlayerMenu> {
 
             currentMenu.set(simplePlayerMenu);
 
+            // todo Run the setup function here
+
             simplePlayerMenu.init();
             simplePlayerMenu.render();
 
@@ -83,13 +85,4 @@ public class PlayerMenuProxyHandler extends AbstractProxyHandler<PlayerMenu> {
         return null;
 
     }
-
-
-    private SimplePlayerMenu findMenuByInventory(Inventory inventory) {
-        return menuMap.values().stream()
-                .filter(menu -> menu.getInventory().equals(inventory))
-                .findFirst()
-                .orElse(null);
-    }
-
 }
